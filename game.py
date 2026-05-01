@@ -1,5 +1,10 @@
+# bouble de jeu et états 
 import pygame
+import random
 from window import *
+from bouton import Button
+from player import Player
+from scoreboard import Scoreboard
 
 class Game:
     __screen: pygame.Surface
@@ -13,8 +18,8 @@ class Game:
     __borders_collision_sprites: pygame.sprite.Group
     __start_buttons: pygame.sprite.Group
     __end_buttons: pygame.sprite.Group
-    __player: 'Player'
-    __scores: 'Scoreboard'
+    __player: Player
+    __scores: Scoreboard
 
     def __init__(self) -> None:
         pygame.init()

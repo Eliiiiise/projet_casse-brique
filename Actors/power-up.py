@@ -1,0 +1,1 @@
+# classe power-up -> sous-classe de Actor

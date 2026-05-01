@@ -1,0 +1,1 @@
+# constantes globales du jeu 

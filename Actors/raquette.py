@@ -1,6 +1,7 @@
+# classe raquette -> sous-classe de Actor
 import pygame
 from window import * #importe tout le fichier
-from game import Game
+from game import Game # du fichier game importe la classe Game 
 
 class raquette :
     __raquette: raquette
