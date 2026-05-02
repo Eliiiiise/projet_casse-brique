@@ -17,3 +17,27 @@ class raquette :
         pygame.draw.rect(surface,pygame.color.Color["white"],((600,700),(100,10)))
 
     
+
+class Raquette(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+
+        # image (rectangle blanc)
+        self.image = pygame.Surface((100, 10))
+        self.image.fill((255, 255, 255))
+
+        # position
+        self.rect = self.image.get_rect()
+        self.rect.y = 700
+        self.rect.centerx = WINDOW_SIZE[0] // 2
+
+    def update(self):
+        # suivre la souris
+        mouse_x = pygame.mouse.get_pos()[0]
+        self.rect.centerx = mouse_x
+
+        # bloquer dans l'écran
+        if self.rect.left < 0:
+            self.rect.left = 0
+        if self.rect.right > WINDOW_SIZE[0]:
+            self.rect.right = WINDOW_SIZE[0]

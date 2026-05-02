@@ -7,8 +7,10 @@ mais il ne doit pas lancer le jeu!!!!'''
 # game.py
 # Gestion principale du jeu (boucle + états)
 
+from tkinter import font
+
 import pygame
-from window import Window
+from window import *
 from menu import Menu
 
 
@@ -20,8 +22,8 @@ class Gameco:
         pygame.init()
 
         # Fenêtre
-        self.window = Window()
-        self.screen = self.window.screen
+        self.screen = pygame.display.set_mode(WINDOW_SIZE)
+        pygame.display.set_caption(WINDOW_TITLE)
 
         # Horloge (FPS)
         self.clock = pygame.time.Clock()
@@ -56,8 +58,10 @@ class Gameco:
             if event.type == pygame.QUIT:
                 self.running = False
 
-            if self.state == "menu":
-                self.menu.handle_event(event)
+            elif self.state == "menu":
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        self.state = "playing"
 
             elif self.state == "playing":
                 pass  # futur : player.handle_event(event)
@@ -76,12 +80,14 @@ class Gameco:
         """
         Affichage à l'écran
         """
-        self.window.clear()
+        self.screen.fill((0, 0, 0))  # Remplir l'écran avec une couleur de fond
 
         if self.state == "menu":
             self.menu.draw(self.screen)
 
         elif self.state == "playing":
-            pass  # futur : afficher la raquette, la balle, etc.
+            font = pygame.font.SysFont(None, 50)
+            text = font.render("GAME RUNNING", True, (255,255,255))
+            self.screen.blit(text, (100,100))
 
-        self.window.update()
+        pygame.display.flip()

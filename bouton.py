@@ -5,6 +5,6 @@ class Button:
         self.text= text
         self.font = font
         self.color = color
-        button_list.append(self)
+        button_list.add(self)
         print()
         # do something

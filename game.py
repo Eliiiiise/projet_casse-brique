@@ -1,5 +1,6 @@
-# bouble de jeu et états 
+# boucle de jeu et états 
 import pygame
+import sys
 import random
 from window import *
 from bouton import Button
@@ -329,5 +330,6 @@ class Game:
             pygame.display.flip()
 
 
-game = Game()
-game.run()
+if __name__ == "__main__":
+    game = Game()
+    game.run()
