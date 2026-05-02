@@ -1,3 +1,4 @@
+# crée la fenêtre , gérer le screen, clear() / update()
 import pygame
 import os
 

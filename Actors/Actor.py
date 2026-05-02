@@ -1,2 +1,12 @@
 import pygame
-from source.entitées.raquette import * 
+from Actors.raquette import * 
+
+'''contiendra par exemple:
+class Actor:
+    def update(self):
+        pass
+
+    def draw(self, screen):
+        pass
+
+'''
