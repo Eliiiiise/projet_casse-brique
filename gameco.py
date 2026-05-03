@@ -3,15 +3,15 @@ et gérer : les états du jeu ( menu,jeu,game over),
 la boucle principale,
 la coordination des objets,
 mais il ne doit pas lancer le jeu!!!!'''
-# clasee game par copilote:
 # game.py
 # Gestion principale du jeu (boucle + états)
 
-from tkinter import font
+from tkinter import font # police pour les caractères, utile ?
 
 import pygame
 from window import *
 from menu import Menu
+from Actors.raquette import Raquette
 
 
 class Gameco:
@@ -35,8 +35,17 @@ class Gameco:
 
         # Éléments du jeu
         self.menu = Menu(self)
+
+        # Donnée joueur
         self.player = None   # sera créé plus tard
         self.scoreboard = None
+        
+        # Acteurs du jeu
+        self.raquette = Raquette()
+        
+        # capture la souris même hors de la fenêtre de jeu
+        pygame.event.set_grab(True)
+        
 
     def run(self):
         """
@@ -74,7 +83,7 @@ class Gameco:
             self.menu.update()
 
         elif self.state == "playing":
-            pass  # futur : mise à jour du jeu
+            self.raquette.update()
 
     def draw(self):
         """
@@ -87,7 +96,8 @@ class Gameco:
 
         elif self.state == "playing":
             font = pygame.font.SysFont(None, 50)
-            text = font.render("GAME RUNNING", True, (255,255,255))
+            text = font.render("GAME RUNNING", True, (255,255,255)) # supprimer plus tard 
             self.screen.blit(text, (100,100))
+            self.raquette.draw(self.screen)
 
         pygame.display.flip()

@@ -1,24 +1,8 @@
-# classe raquette -> sous-classe de Actor
+# classe Raquette -> sous-classe de Actor
 import pygame
 from window import * #importe tout le fichier
-from game import Game # du fichier game importe la classe Game 
 
-class raquette :
-    __raquette: raquette
-    __color: pygame.color
-    __rect: pygame.rect
-
-    def __init__(self, raquette:raquette,color)->None:
-        self.__raquette = raquette
-        self.__color = color
-        self.__rect = pygame.rect(self.__raquette.position, self.__raquette.size)
-
-    def draw(self, surface= WINDOW_SIZE)->None:
-        pygame.draw.rect(surface,pygame.color.Color["white"],((600,700),(100,10)))
-
-    
-
-class Raquette(pygame.sprite.Sprite):
+class Raquette(pygame.sprite.Sprite): #classe spéciale de Pygame pour gérer les objets du jeu ---> facilite les collisions plus tard
     def __init__(self):
         super().__init__()
 
@@ -36,8 +20,11 @@ class Raquette(pygame.sprite.Sprite):
         mouse_x = pygame.mouse.get_pos()[0]
         self.rect.centerx = mouse_x
 
-        # bloquer dans l'écran
-        if self.rect.left < 0:
+        # pas sortir de l'écran 
+        if self.rect.left < 0: 
             self.rect.left = 0
         if self.rect.right > WINDOW_SIZE[0]:
             self.rect.right = WINDOW_SIZE[0]
+    
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)

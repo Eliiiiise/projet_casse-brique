@@ -1,4 +1,5 @@
 # boucle de jeu et états 
+#Actuelement on utilise plutôt gameco ---> supprimer ce fichier ?
 import pygame
 import sys
 import random
