@@ -17,8 +17,8 @@ class Raquette(pygame.sprite.Sprite): #classe spéciale de Pygame pour gérer le
 
     def update(self):
         # suivre la souris
-        mouse_x = pygame.mouse.get_pos()[0]
-        self.rect.centerx = mouse_x
+        dx = pygame.mouse.get_rel()[0]
+        self.rect.x += dx
 
         # pas sortir de l'écran 
         if self.rect.left < 0: 

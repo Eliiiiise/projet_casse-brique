@@ -12,6 +12,7 @@ import pygame
 from window import *
 from menu import Menu
 from Actors.raquette import Raquette
+from Actors.ball import Ball
 
 
 class Gameco:
@@ -42,9 +43,12 @@ class Gameco:
         
         # Acteurs du jeu
         self.raquette = Raquette()
-        
+        self.ball = Ball()
+
         # capture la souris même hors de la fenêtre de jeu
-        pygame.event.set_grab(True)
+        # pygame.event.set_grab(True)
+        pygame.mouse.get_rel() # réinitialise le mouvement de la souris
+        pygame.mouse.set_visible(True)
         
 
     def run(self):
@@ -84,6 +88,19 @@ class Gameco:
 
         elif self.state == "playing":
             self.raquette.update()
+            self.ball.update()
+
+
+            #collision raquette-balle
+            if self.ball.rect.colliderect(self.raquette.rect) and self.ball.dy > 0:
+                self.ball.dy *= -1
+
+                # éviter que la balle reste collée
+                self.ball.rect.bottom = self.raquette.rect.top
+
+                # influence de la raquette sur la balle (plus la souris bouge vite, plus la balle part sur les côtés)
+                dx_mouse = pygame.mouse.get_rel()[0]
+                self.ball.dx = max(-15, min(15, dx_mouse))
 
     def draw(self):
         """
@@ -98,6 +115,9 @@ class Gameco:
             font = pygame.font.SysFont(None, 50)
             text = font.render("GAME RUNNING", True, (255,255,255)) # supprimer plus tard 
             self.screen.blit(text, (100,100))
+
+            # acteurs du jeu
             self.raquette.draw(self.screen)
+            self.ball.draw(self.screen)
 
         pygame.display.flip()
