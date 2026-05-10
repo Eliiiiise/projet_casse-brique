@@ -1,0 +1,28 @@
+# Levels gère la configuration des briques par rapport au niveau
+# Le but est d'augementer au fur et à mesure la difficulté du jeu en augmentant le nombre de briques, leur position, leur résistance, la vitesse de la balle, etc
+# facilite l'implémentation de nouveaux niveaux plus tard
+
+'''
+niveau 1 : 3 lignes x 14 briques
+niveau 2 : 4 lignes x 14 briques (une ligne de plus que le niveau 1 ou 3)
+niveau 3 : en pyramide : 8 briques, puis 7 briques, puis 6, puis 5, puis 4, puis 3, puis 2, puis 1 
+niveau 4 : 
+
+Quand les niveaux sont fini on recommence au niveau 1 mais avec une duretée des briques plus forte (plus de coups pour les casser)
+Proposition également pour augementer la vitesse de la balle pour que ce soit plus difficile au tour suivant etc...
+
+le nombre inscrit dans les niveaux correspond à la résistance de la brique à la position de la brique
+"." correspond à un trou
+
+'''
+
+LEVELS = [
+
+    # NIVEAU 1
+    [
+        "22222222222222",
+        "22222222222222",
+        "22222222222222"
+    ]
+
+]
