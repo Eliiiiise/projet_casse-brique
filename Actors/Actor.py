@@ -15,11 +15,9 @@ Les autres classes du jeu héritent de cette classe.
 '''
 class Actor(pygame.sprite.Sprite):
 
-    def __init__(self, width, height, color):
-        '''
-        Initialise l'apparence de l'objet.
-        '''
-
+    #Initialise l'apparence de l'objet.
+    def __init__(self,x,y, width, height, color):
+       
         # initialise Sprite de pygame
         super().__init__()
 
@@ -32,8 +30,10 @@ class Actor(pygame.sprite.Sprite):
         # rectangle utilisé pour :
         # - la position
         # - les collisions
-        self.rect = self.image.get_rect()
+        self.rect= self.image.get_rect(topleft= (x,y))
 
+    def update(self):
+        pass
 
     def draw(self, screen):
         """
@@ -41,4 +41,3 @@ class Actor(pygame.sprite.Sprite):
         """
 
         screen.blit(self.image, self.rect)
-'''
