@@ -41,4 +41,3 @@ class Actor(pygame.sprite.Sprite):
         """
 
         screen.blit(self.image, self.rect)
-'''
