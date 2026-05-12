@@ -52,7 +52,7 @@ class Brique(pygame.sprite.Sprite):
         self.resistance -= 1
 
         if self.resistance <= 0:
-            self.kill()
+            self.kill()  # kill()= supprime la brick de tous les Group
 
         else:
             self.update_color()

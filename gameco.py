@@ -6,7 +6,7 @@ mais il ne doit pas lancer le jeu!!!!'''
 # game.py
 # Gestion principale du jeu (boucle + états)
 
-from tkinter import font # police pour les caractères, utile ?
+#from tkinter import font # police pour les caractères, utile ?
 
 import pygame
 from window import *
@@ -25,7 +25,7 @@ class Gameco:
         pygame.init()
 
         # Fenêtre
-        self.screen = pygame.display.set_mode(WINDOW_SIZE)
+        self.screen = pygame.display.set_mode((int(WINDOW_SIZE.x), int(WINDOW_SIZE.y)))
         pygame.display.set_caption(WINDOW_TITLE)
 
         # Horloge (FPS)
@@ -65,6 +65,7 @@ class Gameco:
         '''
         Boucle principale du jeu
         '''
+        print(">>>Gameco.run() est exécuté")
         while self.running:
             self.handle_events()
             self.update()
@@ -103,7 +104,7 @@ class Gameco:
 
             #collision raquette-balle
             if self.ball.rect.colliderect(self.raquette.rect) and self.ball.dy > 0:
-                self.ball.dy *= -1
+                self.ball.dy *= -1 # on inverse la direction 
 
                 # éviter que la balle reste collée
                 self.ball.rect.bottom = self.raquette.rect.top
@@ -112,6 +113,15 @@ class Gameco:
                 dx_mouse = pygame.mouse.get_rel()[0]
                 self.ball.dx = max(-15, min(15, dx_mouse))
 
+            #collision balle-brique
+            for brick in self.bricks:
+                if self.ball.rect.colliderect(brick.rect):
+                    self.ball.dy *=-1
+                    brick.hit() #brique touchée
+                    break #on sort de la boucle pour éviter pls collisions dans la même frame
+
+
+                
     def draw(self):
         '''
         Affichage à l'écran
