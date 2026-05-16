@@ -56,7 +56,7 @@ class Gameco:
         self.load_level(self.current_level)
 
         # capture la souris même hors de la fenêtre de jeu
-        # pygame.event.set_grab(True)
+        pygame.event.set_grab(True)
         pygame.mouse.get_rel() # réinitialise le mouvement de la souris
         pygame.mouse.set_visible(True)
         
@@ -111,7 +111,8 @@ class Gameco:
 
                 # influence de la raquette sur la balle (plus la souris bouge vite, plus la balle part sur les côtés)
                 dx_mouse = pygame.mouse.get_rel()[0]
-                self.ball.dx = max(-15, min(15, dx_mouse))
+                if dx_mouse != 0:
+                    self.ball.dx = max(-15, min(15, dx_mouse))
 
             #collision balle-brique
             for brick in self.bricks:
