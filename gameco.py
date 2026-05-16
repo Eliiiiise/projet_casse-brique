@@ -3,7 +3,7 @@ et gérer : les états du jeu ( menu,jeu,game over),
 la boucle principale,
 la coordination des objets,
 mais il ne doit pas lancer le jeu!!!!'''
-# game.py
+# gameco.py remplace le habituel game.py 
 # Gestion principale du jeu (boucle + états)
 
 #from tkinter import font # police pour les caractères, utile ?
@@ -14,7 +14,9 @@ from menu import Menu
 from Actors.raquette import Raquette
 from Actors.ball import Ball
 from Actors.brick import Brique
+from Actors.powerup import PowerUp
 from levels import LEVELS
+import collisions
 
 
 class Gameco:
@@ -53,14 +55,10 @@ class Gameco:
         self.current_level = 0 #renvoi à la position dans la liste LEVELS ---> 0==1
 
         # charge le niveau
-        self.load_level(self.current_level)
+        self.load_level(self.current_level)   
 
-
-        # souris
-        pygame.event.set_grab(True) #capture la souris dans la fenêtre
-        pygame.mouse.set_visible(False) # on ne veut pas voir le curseur de la souris, juste raquette
-        pygame.mouse.set_pos(self.raquette.rect.center) #pour que la raquette suive la souris dès le début
-                    
+        #power-up
+        self.powerups =pygame.sprite.Group()               
 
     def run(self):
         '''
@@ -89,10 +87,6 @@ class Gameco:
                 if event.key == pygame.K_ESCAPE: # ESC = quitter complètement le programme
                     self.running = False 
 
-                elif self.state == "menu":
-                     if event.key == pygame.K_SPACE: # SPACE = démarrer la partie
-                        self.state = "playing"  
-
                 elif self.state == "playing":
                     if event.key == pygame.K_p: # P = mettre le jeu en pause
                         self.state = "pause"
@@ -115,7 +109,7 @@ class Gameco:
         elif self.state == "playing":
             self.raquette.update()
             self.ball.update()
-
+            self.powerups.update()
 
             #collision raquette-balle
             if self.ball.rect.colliderect(self.raquette.rect) and self.ball.dy > 0:
@@ -135,6 +129,35 @@ class Gameco:
                     self.ball.dy *=-1
                     brick.hit() #brique touchée
                     break #on sort de la boucle pour éviter pls collisions dans la même frame
+
+            #collision raquette-powerup
+            if self.ball.rect.colliderect(brick.rect): 
+                self.ball.dy *=-1
+                brick.hit()
+                # si la brique est cassée -> chance de power-up
+                if not brick.alive(): 
+                    import random
+                    if random.random() <0.5: #50%
+                        #position du centre de la brique
+                        x = brick.rect.centerx
+                        y= brick.rect.centery
+
+                        powerups= PowerUp(x,y)
+                        self.powerups.add(powerups)
+
+                        #gestion des powerup
+                        for powerup in self.powerups:
+                            if self.raquette.rect.colliderect(powerup.rect): #detection des collisions
+                                powerup.apply(self) # application de l'effet
+                                powerup.kill() # suppression du powerup une fois utilisé  #kill() = retire automatiquement du groupe
+                               
+
+            #ici la souris se bloque a la raquette lors du jeu mais en dehors(menu/pause) elle est elle même
+            pygame.mouse.set_visible(False)# Cache la souris
+            pygame.event.set_grab(True)# Capture la souris dans la fenêtre
+        else:
+                pygame.mouse.set_visible(True) # Affiche la souris
+                pygame.event.set_grab(False) # Libère la souris
 
 
                 
@@ -157,6 +180,7 @@ class Gameco:
             self.bricks.draw(self.screen)
             self.raquette.draw(self.screen)
             self.ball.draw(self.screen)
+            self.powerups.draw(self.screen)
         
         elif self.state == "pause":
 
@@ -171,6 +195,7 @@ class Gameco:
             text = font.render("PAUSE", True, (255,255,255))
 
             self.screen.blit(text, (450,350))
+           
 
         pygame.display.flip()
     

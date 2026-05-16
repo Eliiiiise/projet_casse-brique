@@ -6,14 +6,22 @@ from window import WINDOW_SIZE
 
 class Ball(Actor.Actor):
     def __init__(self):
+        self.size =10 
+        x = random.randint(0, int(WINDOW_SIZE[0]) - self.size)
+        y = 680
+       
+        super().__init__(x,y,self.size,self.size,(0,255,0))  # x, y, largeur, hauteur, couleur
+        
+    
+        # remplace carrée par un autre transparent
+        self.image = pygame.Surface((self.size, self.size), pygame.SRCALPHA)
 
-        # x, y, largeur, hauteur, couleur
-        super().__init__(
-            random.randint(0, int(WINDOW_SIZE[0]) - 10),
-            680,
-            10,
-            10,
-            (0, 255, 0)
+        # dessin cercle
+        pygame.draw.circle(
+            self.image,
+            (0, 255, 0),
+            (self.size // 2, self.size // 2),  # centre du cercle
+            self.size // 2  # rayon
         )
 
         # vitesse
