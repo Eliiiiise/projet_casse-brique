@@ -55,11 +55,12 @@ class Gameco:
         # charge le niveau
         self.load_level(self.current_level)
 
-        # capture la souris même hors de la fenêtre de jeu
-        pygame.event.set_grab(True)
-        pygame.mouse.get_rel() # réinitialise le mouvement de la souris
-        pygame.mouse.set_visible(True)
-        
+
+        # souris
+        pygame.event.set_grab(True) #capture la souris dans la fenêtre
+        pygame.mouse.set_visible(False) # on ne veut pas voir le curseur de la souris, juste raquette
+        pygame.mouse.set_pos(self.raquette.rect.center) #pour que la raquette suive la souris dès le début
+                    
 
     def run(self):
         '''
@@ -79,16 +80,30 @@ class Gameco:
         Gestion des événements (clavier, souris, fermeture)
         '''
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT:  # si on clique sur la croix de la fenêtre
                 self.running = False
 
-            elif self.state == "menu":
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
-                        self.state = "playing"
+             # gestion des touches du clavier
+            if event.type == pygame.KEYDOWN:
+                
+                if event.key == pygame.K_ESCAPE: # ESC = quitter complètement le programme
+                    self.running = False 
 
-            elif self.state == "playing":
-                pass  # futur : player.handle_event(event)
+                elif self.state == "menu":
+                     if event.key == pygame.K_SPACE: # SPACE = démarrer la partie
+                        self.state = "playing"  
+
+                elif self.state == "playing":
+                    if event.key == pygame.K_p: # P = mettre le jeu en pause
+                        self.state = "pause"
+                    elif event.key == pygame.K_m:# M = retour menu principal
+                        self.state = "menu" 
+
+                elif self.state == "pause":
+                    if event.key == pygame.K_p: # P = reprendre la partie
+                        self.state = "playing"
+                    elif event.key == pygame.K_m: # M = retour menu principal
+                        self.state = "menu"
 
     def update(self):
         '''
@@ -133,15 +148,29 @@ class Gameco:
             self.menu.draw(self.screen)
 
         elif self.state == "playing":
+            """
             font = pygame.font.SysFont(None, 50)
             text = font.render("GAME RUNNING", True, (255,255,255)) # supprimer plus tard 
             self.screen.blit(text, (100,100))
-
+            """
             # acteurs du jeu
             self.bricks.draw(self.screen)
             self.raquette.draw(self.screen)
             self.ball.draw(self.screen)
-            
+        
+        elif self.state == "pause":
+
+            # affiche le jeu figé
+            self.bricks.draw(self.screen)
+            self.raquette.draw(self.screen)
+            self.ball.draw(self.screen)
+
+            # texte pause
+            font = pygame.font.SysFont(None, 80)
+
+            text = font.render("PAUSE", True, (255,255,255))
+
+            self.screen.blit(text, (450,350))
 
         pygame.display.flip()
     

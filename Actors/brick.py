@@ -11,23 +11,25 @@ from window import WINDOW_SIZE
 import Actors.Actor as Actor #pour avoir accès à d'autre fichier
 
 
-class Brique(pygame.sprite.Sprite):
+class Brique(Actor.Actor):
 
-    def __init__(self, x, y, resistance=2): #2  = résistance par défaut (niveau 1), peut être modifiée pour les briques plus solides
-        super().__init__()
+    def __init__(self, x, y, resistance=2):
+
+        # initialise Actor :
+        # x, y, largeur, hauteur, couleur
+        super().__init__(
+            x,
+            y,
+            80,
+            15,
+            (255, 0, 0)
+        )
 
         # résistance
         self.resistance = resistance
         self.max_resistance = resistance
 
-        # apparence
-        self.image = pygame.Surface((80, 15))
-        self.rect = self.image.get_rect()
-
-        self.rect.x = x
-        self.rect.y = y
-
-        # couleur initiale ---> selon la résistance
+        # applique la bonne couleur selon resistance
         self.update_color()
 
     # Change la couleur selon la solidité restante.
@@ -58,5 +60,3 @@ class Brique(pygame.sprite.Sprite):
             self.update_color()
 
 
-    def draw(self, screen):
-        screen.blit(self.image, self.rect)

@@ -9,11 +9,11 @@ Classe mère de tous les objets du jeu.
 Un Actor possède :
 - une image
 - une position (rect)
-- une méthode draw()
+- une méthode draw() pour s'afficher à l'écran
 
 Les autres classes du jeu héritent de cette classe.
 '''
-class Actor(pygame.sprite.Sprite):
+class Actor(pygame.sprite.Sprite): #classe spéciale de Pygame pour gérer les objets du jeu ---> facilite les collisions plus tard
 
     #Initialise l'apparence de l'objet.
     def __init__(self,x,y, width, height, color):
@@ -36,8 +36,5 @@ class Actor(pygame.sprite.Sprite):
         pass
 
     def draw(self, screen):
-        """
-        Affiche l'objet à l'écran.
-        """
-
+     
         screen.blit(self.image, self.rect)

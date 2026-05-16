@@ -4,23 +4,22 @@ import pygame
 import random
 from window import WINDOW_SIZE
 
-class Ball(pygame.sprite.Sprite):
+class Ball(Actor.Actor):
     def __init__(self):
-        super().__init__()
 
-        # apparence
-        self.image = pygame.Surface((10, 10))
-        self.image.fill((0, 255, 0))  # vert
+        # x, y, largeur, hauteur, couleur
+        super().__init__(
+            random.randint(0, int(WINDOW_SIZE[0]) - 10),
+            680,
+            10,
+            10,
+            (0, 255, 0)
+        )
 
-        self.rect = self.image.get_rect()
-
-        # position initiale
-        self.rect.x = random.randint(0, int(WINDOW_SIZE[0]) - 10)
-        self.rect.y = 680
-
-        # vitesse (selon axe x et y)
+        # vitesse
         self.dx = random.randint(-15, 15)
         self.dy = -10
+        
 
     def update(self):
         # déplacement
@@ -38,6 +37,3 @@ class Ball(pygame.sprite.Sprite):
         # balle perdue
         if self.rect.bottom >= WINDOW_SIZE[1]:
             self.kill()  # supprime la balle
-
-    def draw(self, screen):
-        screen.blit(self.image, self.rect)
