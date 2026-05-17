@@ -5,6 +5,7 @@
 #mettre les 50% de chance que le power-up tombe dans brick.py, dans la méthode hit() ou dans gameco.py après la collision balle-brick
 import pygame
 import random
+from Actors.ball import Ball
 from Actors import brick
 import Actors.Actor as Actor
 from window import WINDOW_SIZE

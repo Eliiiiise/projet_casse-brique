@@ -16,7 +16,9 @@ from Actors.ball import Ball
 from Actors.brick import Brique
 from Actors.powerup import PowerUp
 from levels import LEVELS
+from player import Player
 import collisions
+import random
 
 
 class Gameco:
@@ -42,7 +44,7 @@ class Gameco:
         self.menu = Menu(self)
 
         # Donnée joueur
-        self.player = None   # sera créé plus tard
+        self.player = Player() 
         self.scoreboard = None
         
         # Acteurs du jeu
@@ -50,6 +52,9 @@ class Gameco:
         self.ball = Ball()
 
         self.bricks = pygame.sprite.Group()
+        self.balls = pygame.sprite.Group()
+        ball = Ball() # création de la balle
+        self.balls.add(ball) # ajout de la balle au groupe
 
         # niveau actuel
         self.current_level = 0 #renvoi à la position dans la liste LEVELS ---> 0==1
@@ -111,6 +116,20 @@ class Gameco:
             self.ball.update()
             self.powerups.update()
 
+             # si la balle tombe sous l'écran
+            if self.ball.rect.top > WINDOW_SIZE[1]:
+
+                self.player.lose_life() # le joueur perd une vie
+
+                # GAME OVER
+                if self.player.lives <= 0:
+                    self.state = "game_over"
+
+                # recrée une balle
+                else:
+
+                    self.ball = Ball()
+
             #collision raquette-balle
             if self.ball.rect.colliderect(self.raquette.rect) and self.ball.dy > 0:
                 self.ball.dy *= -1 # on inverse la direction 
@@ -123,41 +142,74 @@ class Gameco:
                 if dx_mouse != 0:
                     self.ball.dx = max(-15, min(15, dx_mouse))
 
-            #collision balle-brique
+            # collision balle-brique
             for brick in self.bricks:
+
+                # collision détectée
                 if self.ball.rect.colliderect(brick.rect):
-                    self.ball.dy *=-1
-                    brick.hit() #brique touchée
-                    break #on sort de la boucle pour éviter pls collisions dans la même frame
 
-            #collision raquette-powerup
-            if self.ball.rect.colliderect(brick.rect): 
-                self.ball.dy *=-1
-                brick.hit()
-                # si la brique est cassée -> chance de power-up
-                if not brick.alive(): 
-                    import random
-                    if random.random() <0.5: #50%
-                        #position du centre de la brique
-                        x = brick.rect.centerx
-                        y= brick.rect.centery
+                    # inverse la direction verticale --> rebond
+                    self.ball.dy *= -1
 
-                        powerups= PowerUp(x,y)
-                        self.powerups.add(powerups)
+                     #sort la balle de la brique sinon plusieurs collisions se produisent
+                    if self.ball.dy > 0:
+                        self.ball.rect.top = brick.rect.bottom
 
-                        #gestion des powerup
-                        for powerup in self.powerups:
-                            if self.raquette.rect.colliderect(powerup.rect): #detection des collisions
-                                powerup.apply(self) # application de l'effet
-                                powerup.kill() # suppression du powerup une fois utilisé  #kill() = retire automatiquement du groupe
-                               
+                    else:
+                        self.ball.rect.bottom = brick.rect.top
+
+                    # la brique subit des dégâts
+                    brick.hit()
+
+                    # si la brique est détruite --> chance de power-up
+                    if not brick.alive():
+
+                    # 50% de chance de créer un power-up
+                        if random.random() < 0.5:
+
+                            # céation du powerup au centre de la brique
+                            x = brick.rect.centerx
+                            y = brick.rect.centery
+                            powerup = PowerUp(x, y)
+
+                            # ajout au groupe
+                            self.powerups.add(powerup)
+
+
+                    # évite plusieurs collisions dans la même frame
+                    break
+            
+            # collision raquette-powerup
+            for powerup in self.powerups:
+
+                if self.raquette.rect.colliderect(powerup.rect):
+
+                    # applique l'effet
+                    powerup.apply_effect(self)
+
+                    # supprime le power-up
+                    powerup.kill()
+
+            # fin des powerup temporaires
+            current_time = pygame.time.get_ticks()
+
+            if hasattr(self, "power_end_time"):
+
+                if current_time > self.power_end_time:
+
+                    # taille normale raquette
+                    self.raquette.rect.width = 100
+
+                    # désactive effets
+                    self.invisible = False
+                    self.piercing = False
 
             #ici la souris se bloque a la raquette lors du jeu mais en dehors(menu/pause) elle est elle même
             pygame.mouse.set_visible(False)# Cache la souris
             pygame.event.set_grab(True)# Capture la souris dans la fenêtre
         else:
-                pygame.mouse.set_visible(True) # Affiche la souris
-                pygame.event.set_grab(False) # Libère la souris
+            pygame.mouse.set_visible(True) # Affiche la souris
+            pygame.event.set_grab(False) # Libère la souris
 
 
                 
@@ -179,7 +231,8 @@ class Gameco:
             # acteurs du jeu
             self.bricks.draw(self.screen)
             self.raquette.draw(self.screen)
-            self.ball.draw(self.screen)
+            if not getattr(self, "invisible", False): # si la balle n'est pas invisible
+                self.ball.draw(self.screen)
             self.powerups.draw(self.screen)
         
         elif self.state == "pause":

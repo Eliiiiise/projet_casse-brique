@@ -111,3 +111,5 @@ class Menu:
         # en pause un texte recap s'affiche genre points, nb de vie, level,... 
         # et quand je perds "game over" apparait en gros avec en dessous un recap des point du level et en dessous un bouton pour rejouer 
         # afficher un bouton menu sur la page pause en haut a droite
+        # pendant le texte pause mettre un bouton recommencer
+        # faire une partie entrer nom de joueur pour le highscore
