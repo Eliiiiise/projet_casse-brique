@@ -9,16 +9,20 @@ mais il ne doit pas lancer le jeu!!!!'''
 #from tkinter import font # police pour les caractères, utile ?
 
 import pygame
+import random
 from window import *
 from menu import Menu
+from gameover_menu import GameOverMenu
 from Actors.raquette import Raquette
 from Actors.ball import Ball
 from Actors.brick import Brique
 from Actors.powerup import PowerUp
 from levels import LEVELS
 from player import Player
-import collisions
-import random
+from collisions import handle_collisions
+from input_manager import handle_input
+
+
 
 
 class Gameco:
@@ -38,10 +42,11 @@ class Gameco:
 
         # État du jeu
         self.running = True
-        self.state = "menu"   # "menu", "playing", "game_over"
+        self.state = "menu"   # "menu", "playing","pause", "game_over"
 
         # Éléments du jeu
         self.menu = Menu(self)
+        self.gameover_menu = GameOverMenu(self)
 
         # Donnée joueur
         self.player = Player() 
@@ -71,51 +76,38 @@ class Gameco:
         '''
         print(">>>Gameco.run() est exécuté")
         while self.running:
-            self.handle_events()
+            events = pygame.event.get() #evenement clavier/souris
+            handle_input(self, events) # on renvoie au doc input
             self.update()
             self.draw()
             self.clock.tick(self.fps)
 
         pygame.quit()
 
-    def handle_events(self):
-        '''
-        Gestion des événements (clavier, souris, fermeture)
-        '''
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:  # si on clique sur la croix de la fenêtre
-                self.running = False
-
-             # gestion des touches du clavier
-            if event.type == pygame.KEYDOWN:
-                
-                if event.key == pygame.K_ESCAPE: # ESC = quitter complètement le programme
-                    self.running = False 
-
-                elif self.state == "playing":
-                    if event.key == pygame.K_p: # P = mettre le jeu en pause
-                        self.state = "pause"
-                    elif event.key == pygame.K_m:# M = retour menu principal
-                        self.state = "menu" 
-
-                elif self.state == "pause":
-                    if event.key == pygame.K_p: # P = reprendre la partie
-                        self.state = "playing"
-                    elif event.key == pygame.K_m: # M = retour menu principal
-                        self.state = "menu"
-
     def update(self):
         '''
         Mise à jour de la logique du jeu
         '''
+    
         if self.state == "menu":
             self.menu.update()
 
         elif self.state == "playing":
-            self.raquette.update()
+            # appel d'une méthode d'un objet
+            self.raquette.update()  
             self.ball.update()
             self.powerups.update()
 
+            #appel d'une fonction externe
+            handle_collisions(self) 
+
+        elif self.state == "pause":
+            pass
+          
+        elif self.state == "game_over":
+            self.gameover_menu.update()
+
+  
              # si la balle tombe sous l'écran
             if self.ball.rect.top > WINDOW_SIZE[1]:
 
@@ -127,92 +119,22 @@ class Gameco:
 
                 # recrée une balle
                 else:
-
                     self.ball = Ball()
+    
+    def reset_game(self):
+        """
+        Réinitialise le jeu quand on clique Rejouer
+        """
+        self.player.reset_lives()
 
-            #collision raquette-balle
-            if self.ball.rect.colliderect(self.raquette.rect) and self.ball.dy > 0:
-                self.ball.dy *= -1 # on inverse la direction 
+        # recrée balle et raquette
+        self.ball = Ball()
+        self.raquette = Raquette()
 
-                # éviter que la balle reste collée
-                self.ball.rect.bottom = self.raquette.rect.top
+        # recrée briques
+        self.load_level(self.current_level)
+        
 
-                # influence de la raquette sur la balle (plus la souris bouge vite, plus la balle part sur les côtés)
-                dx_mouse = pygame.mouse.get_rel()[0]
-                if dx_mouse != 0:
-                    self.ball.dx = max(-15, min(15, dx_mouse))
-
-            # collision balle-brique
-            for brick in self.bricks:
-
-                # collision détectée
-                if self.ball.rect.colliderect(brick.rect):
-
-                    # inverse la direction verticale --> rebond
-                    self.ball.dy *= -1
-
-                     #sort la balle de la brique sinon plusieurs collisions se produisent
-                    if self.ball.dy > 0:
-                        self.ball.rect.top = brick.rect.bottom
-
-                    else:
-                        self.ball.rect.bottom = brick.rect.top
-
-                    # la brique subit des dégâts
-                    brick.hit()
-
-                    # si la brique est détruite --> chance de power-up
-                    if not brick.alive():
-
-                    # 50% de chance de créer un power-up
-                        if random.random() < 0.5:
-
-                            # céation du powerup au centre de la brique
-                            x = brick.rect.centerx
-                            y = brick.rect.centery
-                            powerup = PowerUp(x, y)
-
-                            # ajout au groupe
-                            self.powerups.add(powerup)
-
-
-                    # évite plusieurs collisions dans la même frame
-                    break
-            
-            # collision raquette-powerup
-            for powerup in self.powerups:
-
-                if self.raquette.rect.colliderect(powerup.rect):
-
-                    # applique l'effet
-                    powerup.apply_effect(self)
-
-                    # supprime le power-up
-                    powerup.kill()
-
-            # fin des powerup temporaires
-            current_time = pygame.time.get_ticks()
-
-            if hasattr(self, "power_end_time"):
-
-                if current_time > self.power_end_time:
-
-                    # taille normale raquette
-                    self.raquette.rect.width = 100
-
-                    # désactive effets
-                    self.invisible = False
-                    self.piercing = False
-
-            #ici la souris se bloque a la raquette lors du jeu mais en dehors(menu/pause) elle est elle même
-            pygame.mouse.set_visible(False)# Cache la souris
-            pygame.event.set_grab(True)# Capture la souris dans la fenêtre
-        else:
-            pygame.mouse.set_visible(True) # Affiche la souris
-            pygame.event.set_grab(False) # Libère la souris
-
-
-                
     def draw(self):
         '''
         Affichage à l'écran
@@ -248,6 +170,9 @@ class Gameco:
             text = font.render("PAUSE", True, (255,255,255))
 
             self.screen.blit(text, (450,350))
+
+        elif self.state == "game_over":
+            self.gameover_menu,self.draw(self.screen)
            
 
         pygame.display.flip()
