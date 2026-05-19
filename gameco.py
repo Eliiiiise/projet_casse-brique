@@ -5,14 +5,16 @@ la coordination des objets,
 mais il ne doit pas lancer le jeu!!!!'''
 # gameco.py remplace le habituel game.py 
 # Gestion principale du jeu (boucle + états)
+#gameco-> dessine tout le jeu 
 
 #from tkinter import font # police pour les caractères, utile ?
 
 import pygame
 import random
 from window import *
-from menu import Menu
+from home_menu import HomeMenu
 from gameover_menu import GameOverMenu
+from pause_menu import PauseMenu
 from Actors.raquette import Raquette
 from Actors.ball import Ball
 from Actors.brick import Brique
@@ -42,11 +44,12 @@ class Gameco:
 
         # État du jeu
         self.running = True
-        self.state = "menu"   # "menu", "playing","pause", "game_over"
+        self.state = "home_menu"   # "menu", "playing","pause", "game_over"
 
         # Éléments du jeu
-        self.menu = Menu(self)
+        self.home_menu = HomeMenu(self)
         self.gameover_menu = GameOverMenu(self)
+        self.pause_menu =PauseMenu(self)
 
         # Donnée joueur
         self.player = Player() 
@@ -89,8 +92,8 @@ class Gameco:
         Mise à jour de la logique du jeu
         '''
     
-        if self.state == "menu":
-            self.menu.update()
+        if self.state == "home_menu":
+            self.home_menu.update()
 
         elif self.state == "playing":
             # appel d'une méthode d'un objet
@@ -102,7 +105,7 @@ class Gameco:
             handle_collisions(self) 
 
         elif self.state == "pause":
-            pass
+            self.pause_menu.update()
           
         elif self.state == "game_over":
             self.gameover_menu.update()
@@ -141,8 +144,8 @@ class Gameco:
         '''
         self.screen.fill((0, 0, 0))  # Remplir l'écran avec une couleur de fond
 
-        if self.state == "menu":
-            self.menu.draw(self.screen)
+        if self.state == "home_menu":
+            self.home_menu.draw(self.screen)
 
         elif self.state == "playing":
             """
@@ -164,12 +167,17 @@ class Gameco:
             self.raquette.draw(self.screen)
             self.ball.draw(self.screen)
 
-            # texte pause
-            font = pygame.font.SysFont(None, 80)
+            overlay = pygame.Surface((1280, 720)) # créer une surface de lataille de l'écran
 
-            text = font.render("PAUSE", True, (255,255,255))
+            # on gère la transparence : 0=invisible, 255=opaque
+            overlay.set_alpha(150)
 
-            self.screen.blit(text, (450,350))
+            #couleur de l'effet (noir->effet sombre)
+            self.screen.blit(overlay,(0,0))
+
+            #dessine le menu pause (par dessu le jeu)
+            self.pause_menu.draw(self.screen)
+
 
         elif self.state == "game_over":
             self.gameover_menu,self.draw(self.screen)

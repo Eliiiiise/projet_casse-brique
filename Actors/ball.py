@@ -26,7 +26,7 @@ class Ball(Actor.Actor):
 
         # vitesse
         self.dx = random.randint(-15, 15)
-        self.dy = 10 # en pygame y aug vers le bas et diminue vers le haut
+        self.dy = -10 # en pygame y aug vers le bas et diminue vers le haut
         
 
     def update(self):

@@ -1,7 +1,7 @@
 # menus (start,game over,next level)
 # bouton jouer
 import pygame
-class Menu:
+class HomeMenu:
     def __init__(self, gameco):
         self.game = gameco
         
@@ -57,9 +57,9 @@ class Menu:
         )
         
         #centré au milieu (espacé vertical)
-        self.line2_rect = self.line2.get_rect(center=(centre_x, 370))
-        self.line3_rect = self.line3.get_rect(center=(centre_x, 420))
-        self.line4_rect = self.line4.get_rect(center=(centre_x, 470))
+        self.line2_rect = self.line2.get_rect(center=(centre_x, 380))
+        self.line3_rect = self.line3.get_rect(center=(centre_x, 430))
+        self.line4_rect = self.line4.get_rect(center=(centre_x, 480))
         self.button_text_rect = self.button_text.get_rect(center=self.button_rect.center)
 
         #texte en bas a droite 

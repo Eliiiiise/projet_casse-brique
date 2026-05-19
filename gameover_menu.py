@@ -57,8 +57,8 @@ class GameOverMenu:
         )
 
         #centré au milieu (espacé vertical)
-        self.score_rect_rect = self.score_text.get_rect(center=(centre_x, 370))
-        self.lev_rect_rect = self.level_text.get_rect(center=(centre_x, 420))
+        self.score_rect_rect = self.score_text.get_rect(center=(centre_x, 380))
+        self.lev_rect_rect = self.level_text.get_rect(center=(centre_x, 430))
         self.button_text_rect = self.button_text.get_rect(center=self.button_rect.center)
         self.quit_text_rect = self.quit_text.get_rect(center=self.quit_rect.center)
        
@@ -112,23 +112,27 @@ class GameOverMenu:
         else:  # de base 
             color = (102, 178, 255)
 
+        # Dessine les boutons
+        pygame.draw.rect(screen, color, self.button_rect)
+
+        # Dessine le texte
+        screen.blit(self.button_text, self.button_text_rect)
+
         #bouton X
         mouse_pos = pygame.mouse.get_pos()
         hover = self.quit_rect.collidepoint(mouse_pos)
         # Si la souris est dessus → couleur plus claire et grossissement du bouton
         if hover: # quand la souris est dessus 
             color = (150, 0, 0) 
-            scale_rect = self.button_rect.inflate(10, 10)
+            scale_rect = self.quit_rect.inflate(10, 10)
 
         else: # de base 
             color = (236, 0, 0)
             scale_rect = self.quit_rect
 
-        # Dessine les boutons
-        pygame.draw.rect(screen, color, self.button_rect)
+        # Dessine le bouton X
         pygame.draw.rect(screen, color, scale_rect)
 
         # Dessine le texte
-        screen.blit(self.button_text, self.button_text_rect)
-        screen.blit(self.button_text, self.quit_text_rect)
+        screen.blit(self.quit_text, self.quit_text_rect)
 

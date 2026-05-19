@@ -37,23 +37,25 @@ def handle_keyboard (game,event):
             if event.key == pygame.K_p: # P = mettre le jeu en pause
                 game.state = "pause"
             elif event.key == pygame.K_m:# M = retour menu principal
-                game.state = "menu" 
+                game.state = "home_menu" 
 
         elif game.state == "pause":
-            if event.key == pygame.K_p: # P = reprendre la partie
+            if event.key == pygame.K_p: # P = retour au jeu
                 game.state = "playing"
             elif event.key == pygame.K_m: # M = retour menu principal
-                game.state = "menu"
+                game.state = "home_menu"
 
 def handle_click (game,event):  
     """
     Gère les clics de la souris 
     """    
-    if game.state == "menu":
-        game.menu.handle_event(event)
+    if game.state == "home_menu":
+        game.home_menu.handle_event(event)
+    elif game.state == "pause":
+        game.pause_menu.handle_event(event)
     elif game.state == "game_over":
         game.gameover_menu.handle_event(event)
-
+    
 
 
 def handle_input(game, events):

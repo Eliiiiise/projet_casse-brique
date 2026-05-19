@@ -12,3 +12,6 @@
     - j'ai créer le fichier input_manager pour décharger gameco -> il sert a gérer souris, clavier, clic, interraction : donc j'ai déplacer les trucs de souris, de clavier et le bouton "jouer" dedans  et ca fonctionne
     - menu game-over créer il faut juste faire que ca note le score qu'on calculera et le niveau atteint. Et changer les couleurs du bouton rejoue. j'ai aussi fait un bouton X qui permet de quitter le jeu proprement et qui gonfle quand on passe dessus.
     - j'ai fait tout ca mais ca ne marche plus quand la balle tombe je n'ai pas de vie supp et le menu gameover ne s'affiche pas et la j'avoue qu'il est 00h30 et que mon cerfveau lache un peu totalement donc je vais ma'arréter la pour adj et voir ca demain a 13h  peut-etre avec Estiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.
+-- 19.05 Elise: 
+    - j'ai créer un fichier pause_menu pour que tout soit au meme endroit et pas dispatcher et donc se sera plus facil pour les modifs.j'ai fait un bouton reprendre, mais le P fonctionne tjrs pour reprendre le jeu.Je fais aussi le bouton quit ici. il a un bouton home (avec une petite maison)
+    - le fichier menu est devenu home_menu 
