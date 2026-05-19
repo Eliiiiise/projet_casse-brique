@@ -44,7 +44,7 @@ class Gameco:
 
         # État du jeu
         self.running = True
-        self.state = "home_menu"   # "menu", "playing","pause", "game_over"
+        self.state = "menu"   # "menu", "playing","pause", "game_over"
 
         # Éléments du jeu
         self.home_menu = HomeMenu(self)
@@ -92,7 +92,7 @@ class Gameco:
         Mise à jour de la logique du jeu
         '''
     
-        if self.state == "home_menu":
+        if self.state == "menu":
             self.home_menu.update()
 
         elif self.state == "playing":
@@ -144,7 +144,7 @@ class Gameco:
         '''
         self.screen.fill((0, 0, 0))  # Remplir l'écran avec une couleur de fond
 
-        if self.state == "home_menu":
+        if self.state == "menu":
             self.home_menu.draw(self.screen)
 
         elif self.state == "playing":

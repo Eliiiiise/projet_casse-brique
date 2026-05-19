@@ -11,10 +11,11 @@ class PauseMenu:
         self.quit_font= pygame.font.SysFont(None,50)#bouton rejouer
         self.text_font = pygame.font.SysFont(None, 40) #texte
 
-        #boutton
+        #boutons
         self.button_rect =pygame.Rect(540,300,180,50)
         self.quit_rect = pygame.Rect(1200, 20, 40, 40) # position en haut a droite
-        self.home_rect = pygame.Rect(1200,80,60,60) 
+        self.home_rect = pygame.Rect(self.quit_rect.x -70, #décalé à gauche
+                                     20,40,40)
 
 
         # Texte titre
@@ -157,12 +158,12 @@ class PauseMenu:
 
     # Dessine le bouton home
         # mur
-        pygame.draw.rect(screen, color, (self.home_rect.x +15, self.home_rect.y +30,30,25))
+        pygame.draw.rect(screen, color, (self.home_rect.x +5, self.home_rect.y +15,30,25))
          
         # toit (tiangle)
-        pygame.draw.polygon(screen,color,[(self.home_rect.x +10, self.home_rect.y+30),
-                                          (self.home_rect.x +30, self.home_rect.y+10),
-                                          (self.home_rect.x +50, self.home_rect.y +30),
+        pygame.draw.polygon(screen,color,[(self.home_rect.x +0, self.home_rect.y+20),
+                                          (self.home_rect.x +20, self.home_rect.y+0),
+                                          (self.home_rect.x +40, self.home_rect.y +20),
                                           ]
                             )
 
