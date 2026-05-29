@@ -1,8 +1,7 @@
 # ce qu'on veut/doit faire
 -- en pause un texte recap s'affiche genre points, nb de vie, level ->il faut juste que le score, les vie et le level s'affiche suivant notre jeu pour l'instant c'est des données fixes
 
--- et quand je perds "game over" apparait en gros avec en dessous un recap des point du level et en dessous un bouton pour rejouer -> c'est fait mais le gameover ne s'affiche pas cf.18.05$
--- vies et gameover 
+-- et quand je perds "game over" apparait en gros avec en dessous un recap des point du level et en dessous un bouton pour rejouer -> ->il faut juste que le score, les vie et le level s'affiche suivant notre jeu pour l'instant c'est des données fixes
 
 -- faire une partie entrer nom de joueur pour le highscore
 
@@ -24,7 +23,10 @@
     - le fichier menu est devenu home_menu 
     les vies et le gameover ne fonctionnent tjrs pas faut VRAIEMENT regarder ca 
 
+
 -- 29.05 Elise :
     - j'ai déplacer tout les def_handle des menus dans input_manager et home et pause fonctione
     - j'ai réglé un truc les vie supp sont revenus !!!!!!!!!!!
     - erwan a reussi a nous faire apparaitre la page gameover !!!!!!!!!!!!!!!!!!!!!!! mais les boutons de la page fonctionne pas
+    - le level 8 est au top
+    - les boutons de du menu game over marche!!!!!!

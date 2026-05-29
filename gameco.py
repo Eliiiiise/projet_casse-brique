@@ -103,7 +103,6 @@ class Gameco:
             # GAME OVER
             if self.player.lives <= 0:
                 self.state = "game_over"
-                self.last_state_change = pygame.time.get_ticks() # réinitialise le timer pour éviter les clics rapides sur "Rejouer"    
 
             # recrée une balle
             else:

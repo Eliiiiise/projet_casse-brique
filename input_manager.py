@@ -86,14 +86,13 @@ def handle_click (game,event):
         # ---------------------------
         elif game.state == "game_over":
 
-            #ignore les clics rapides sur "Rejouer" après un game over
-            if pygame.time.get_ticks() - game.last_state_change < 500: # 500 ms = 0.5 sec
-                return
-
             if game.gameover_menu.button_rect.collidepoint(mouse_pos):
                 game.reset_game()
                 game.state = "playing"
+
+            #bouton quitter (X)    
             elif game.gameover_menu.quit_rect.collidepoint(mouse_pos):
+                print("QUIT")
                 game.running = False
 
 def handle_input(game, events):
