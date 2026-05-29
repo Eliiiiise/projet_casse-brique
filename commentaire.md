@@ -23,3 +23,8 @@
     - j'ai créer un fichier pause_menu pour que tout soit au meme endroit et pas dispatcher et donc se sera plus facil pour les modifs.j'ai fait un bouton reprendre, mais le P fonctionne tjrs pour reprendre le jeu.Je fais aussi le bouton quit ici. il a un bouton home (avec une petite maison) et il est trop beaaaauuuu!!!!!
     - le fichier menu est devenu home_menu 
     les vies et le gameover ne fonctionnent tjrs pas faut VRAIEMENT regarder ca 
+
+-- 29.05 Elise :
+    - j'ai déplacer tout les def_handle des menus dans input_manager et home et pause fonctione
+    - j'ai réglé un truc les vie supp sont revenus !!!!!!!!!!!
+    - erwan a reussi a nous faire apparaitre la page gameover !!!!!!!!!!!!!!!!!!!!!!! mais les boutons de la page fonctionne pas
