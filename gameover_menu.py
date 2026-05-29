@@ -57,8 +57,8 @@ class GameOverMenu:
         )
 
         #centré au milieu (espacé vertical)
-        self.score_rect_rect = self.score_text.get_rect(center=(centre_x, 380))
-        self.lev_rect_rect = self.level_text.get_rect(center=(centre_x, 430))
+        self.score_rect = self.score_text.get_rect(center=(centre_x, 380))
+        self.level_rect = self.level_text.get_rect(center=(centre_x, 430))
         self.button_text_rect = self.button_text.get_rect(center=self.button_rect.center)
         self.quit_text_rect = self.quit_text.get_rect(center=self.quit_rect.center)
        
@@ -71,36 +71,13 @@ class GameOverMenu:
             '''
             pass
 
-    def handle_event(self, event):
-            ''' 
-            Gère les clics souris dans le menu
-            '''
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                
-                # vérifier que le clic est sur le bouton
-                if self.button_rect.collidepoint(pygame.mouse.get_pos()):
-                
-                    # changer l’état du jeu
-                    self.game.reset_game()
-                    self.game.state = "playing"
-
-
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                 mouse_pos = pygame.mouse.get_pos()
-                 
-                # si la souris est sur la croix
-                 if self.quit_rect.collidepoint(mouse_pos):
-                    # quitter le jeu
-                    self.game.running = False
-
-            
     def draw(self, screen): #affichage du menu 
         #couleur de fond
         screen.fill((0, 0, 0))
         #afficher le texte
         screen.blit(self.title, self.title_rect)
-        screen.blit(self.score, self.score_rect)
-        screen.blit(self.level, self.level_rect)
+        screen.blit(self.score_text, self.score_rect)
+        screen.blit(self.level_text, self.level_rect)
         screen.blit(self.credit, self.credit_rect)
        
         

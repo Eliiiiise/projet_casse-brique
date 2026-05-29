@@ -73,20 +73,6 @@ class HomeMenu:
         '''
         pass
 
-
-    def handle_event(self, event):
-        ''' 
-        Gère les clics souris dans le menu
-        '''
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            
-            # vérifier que le clic est sur le bouton
-            if self.button_rect.collidepoint(pygame.mouse.get_pos()):
-            
-                # changer l’état du jeu
-                self.game.state = "playing"
-
-
     def draw(self, screen): #affichage du menu 
        
         #couleur de fond

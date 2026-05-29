@@ -71,7 +71,10 @@ class Gameco:
         self.load_level(self.current_level)   
 
         #power-up
-        self.powerups =pygame.sprite.Group()               
+        self.powerups =pygame.sprite.Group()    
+
+        # timer anti-click
+        self.last_state_change= pygame.time.get_ticks() # temps écoulé depuis le lancement du jeu (en ms)
 
     def run(self):
         '''
@@ -92,6 +95,20 @@ class Gameco:
         Mise à jour de la logique du jeu
         '''
     
+        # si la balle tombe sous l'écran
+        if self.ball.rect.top > WINDOW_SIZE[1]:
+
+            self.player.lose_life() # le joueur perd une vie
+
+            # GAME OVER
+            if self.player.lives <= 0:
+                self.state = "game_over"
+                self.last_state_change = pygame.time.get_ticks() # réinitialise le timer pour éviter les clics rapides sur "Rejouer"    
+
+            # recrée une balle
+            else:
+                self.ball = Ball()
+
         if self.state == "menu":
             self.home_menu.update()
 
@@ -111,24 +128,18 @@ class Gameco:
             self.gameover_menu.update()
 
   
-             # si la balle tombe sous l'écran
-            if self.ball.rect.top > WINDOW_SIZE[1]:
 
-                self.player.lose_life() # le joueur perd une vie
-
-                # GAME OVER
-                if self.player.lives <= 0:
-                    self.state = "game_over"
-
-                # recrée une balle
-                else:
-                    self.ball = Ball()
     
     def reset_game(self):
         """
         Réinitialise le jeu quand on clique Rejouer
         """
+        print(">>>Gameco.reset_game() est exécuté")
         self.player.reset_lives()
+
+        
+        # reset état
+        self.state = "playing"
 
         # recrée balle et raquette
         self.ball = Ball()
@@ -180,7 +191,7 @@ class Gameco:
 
 
         elif self.state == "game_over":
-            self.gameover_menu,self.draw(self.screen)
+            self.gameover_menu.draw(self.screen)
            
 
         pygame.display.flip()
