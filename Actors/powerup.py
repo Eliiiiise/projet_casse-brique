@@ -55,12 +55,14 @@ class PowerUp(Actor.Actor):
 
         # Type 3: balle ralentie
         elif self.type == 3:
-            game.ball.dy = 5
+            for ball in game.balls:
+                ball.dy = 5
             game.power_end_time = current_time + 5000
 
         # Type 4: balle accélérée 
         elif self.type == 4:
-            game.ball.dy = 15
+            for ball in game.balls:
+                ball.dy = 15
             game.power_end_time = current_time + 5000
 
         # Type 5: 10 balles supplémentaires
@@ -71,10 +73,13 @@ class PowerUp(Actor.Actor):
 
         # Type 6: balle invisible
         elif self.type == 6:
+            for ball in game.balls:
+                ball.image.set_alpha(0) # rend la balle invisible
             game.invisible = True
             game.power_end_time = current_time + 2000
 
         # Type 7: balles transperçantes
         elif self.type == 7:
-            game.piercing = True
+            for ball in game.balls:
+                ball.piercing = True
             game.power_end_time = current_time + 10000

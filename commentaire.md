@@ -30,3 +30,4 @@
     - erwan a reussi a nous faire apparaitre la page gameover !!!!!!!!!!!!!!!!!!!!!!! mais les boutons de la page fonctionne pas
     - le level 8 est au top
     - les boutons de du menu game over marche!!!!!!
+    - les powerups on fonctionné mais dès que j'ai finis de changer tous les ball en balls, la balle a commencé a suivre le mouvement de la raquette et je sais pas pk, j'ai tout essayé meme revenir en arrière rien ne marche j'ai un video de ce que j'ai faut que je t'ai envoyé.

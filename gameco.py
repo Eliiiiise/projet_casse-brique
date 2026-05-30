@@ -57,9 +57,9 @@ class Gameco:
         
         # Acteurs du jeu
         self.raquette = Raquette()
-        self.ball = Ball()
 
         self.bricks = pygame.sprite.Group()
+
         self.balls = pygame.sprite.Group()
         ball = Ball() # création de la balle
         self.balls.add(ball) # ajout de la balle au groupe
@@ -94,19 +94,19 @@ class Gameco:
         '''
         Mise à jour de la logique du jeu
         '''
-    
         # si la balle tombe sous l'écran
-        if self.ball.rect.top > WINDOW_SIZE[1]:
+        for ball in self.balls:
+            if ball.rect.top > WINDOW_SIZE[1]:
+                self.player.lose_life() # le joueur perd une vie
 
-            self.player.lose_life() # le joueur perd une vie
+                # GAME OVER
+                if self.player.lives <= 0:
+                    self.state = "game_over"
 
-            # GAME OVER
-            if self.player.lives <= 0:
-                self.state = "game_over"
-
-            # recrée une balle
+                # recrée une balle
             else:
-                self.ball = Ball()
+                self.ball = Ball() 
+
 
         if self.state == "menu":
             self.home_menu.update()
@@ -114,7 +114,7 @@ class Gameco:
         elif self.state == "playing":
             # appel d'une méthode d'un objet
             self.raquette.update()  
-            self.ball.update()
+            self.balls.update()
             self.powerups.update()
 
             #appel d'une fonction externe
@@ -140,7 +140,7 @@ class Gameco:
         # reset état
         self.state = "playing"
 
-        # recrée balle et raquette
+        # recrée raquette et balle 
         self.ball = Ball()
         self.raquette = Raquette()
 
@@ -167,7 +167,7 @@ class Gameco:
             self.bricks.draw(self.screen)
             self.raquette.draw(self.screen)
             if not getattr(self, "invisible", False): # si la balle n'est pas invisible
-                self.ball.draw(self.screen)
+                self.balls.draw(self.screen)
             self.powerups.draw(self.screen)
         
         elif self.state == "pause":
@@ -175,7 +175,7 @@ class Gameco:
             # affiche le jeu figé
             self.bricks.draw(self.screen)
             self.raquette.draw(self.screen)
-            self.ball.draw(self.screen)
+            self.balls.draw(self.screen)
 
             overlay = pygame.Surface((1280, 720)) # créer une surface de lataille de l'écran
 
