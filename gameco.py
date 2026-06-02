@@ -94,20 +94,6 @@ class Gameco:
         '''
         Mise à jour de la logique du jeu
         '''
-        # si la balle tombe sous l'écran
-        for ball in self.balls:
-            if ball.rect.top > WINDOW_SIZE[1]:
-                self.player.lose_life() # le joueur perd une vie
-
-                # GAME OVER
-                if self.player.lives <= 0:
-                    self.state = "game_over"
-
-                # recrée une balle
-            else:
-                self.ball = Ball() 
-
-
         if self.state == "menu":
             self.home_menu.update()
 
@@ -119,6 +105,42 @@ class Gameco:
 
             #appel d'une fonction externe
             handle_collisions(self) 
+
+            # vérifier chaque balle si elle sort de l'écran (perte de balle) 
+            for ball in self.balls:
+                if ball.rect.top > WINDOW_SIZE[1]:
+                    ball.kill()  # supprimer la balle
+            if len(self.balls) == 0: # si aucune balle n'est présente
+                    self.player.lose_life()
+
+                    # GAME OVER
+                    if self.player.lives <= 0:
+                        self.state = "game_over"
+
+                    else:# recréer une balle
+                        new_ball = Ball()
+                        self.balls.add(new_ball)
+
+            #la gestion du temps  doit être dans la partie "playing" pour éviter que les timers avancent pendant le menu ou la pause 
+            # fin des powerup temporaires => à chaque frame, on vérifie si un power-up est actif et si son timer est écoul
+            current_time = pygame.time.get_ticks()
+
+            # si un power-up est actif (on a défini un timer)
+            if hasattr(self, "power_end_time"): 
+
+                if current_time > self.power_end_time:
+                        # taille normale raquette
+                        self.raquette.rect.width = 100
+                        
+                        # recréer surface normale
+                        self.raquette.resize(100, self.raquette.rect.height, (255, 255, 255))
+
+                        # désactive effets
+                        self.invisible = False
+                        self.piercing = False
+
+                        #supprime le timer pour éviter de vérifier à chaque frame
+                        del self.power_end_time
 
         elif self.state == "pause":
             self.pause_menu.update()
@@ -141,12 +163,39 @@ class Gameco:
         self.state = "playing"
 
         # recrée raquette et balle 
-        self.ball = Ball()
+        self.balls = pygame.sprite.Group()
         self.raquette = Raquette()
 
         # recrée briques
         self.load_level(self.current_level)
         
+
+    def draw_heart(self, screen, x, y, size=10):
+        """
+        Dessine un coeur pixelisé à la position (x, y)
+        size = taille des pixels
+        """
+
+        color = (255, 65, 161)  # même que bouton home dans pause_menu pour une cohérence visuelle 
+ 
+
+        # liste de "pixels" du coeur (forme simple)
+        heart_shape = [
+                  (1,0),(2,0),      (4,0),(5,0),
+            (0,1),(1,1),(2,1),(3,1),(4,1),(5,1),(6,1),
+            (0,2),(1,2),(2,2),(3,2),(4,2),(5,2),(6,2),
+                  (1,3),(2,3),(3,3),(4,3),(5,3),
+                        (2,4),(3,4),(4,4),
+                              (3,5)
+        ] # sur des axes x(->),y(descendant) avec (0,0) en haut à gauche du coeur, chaqque coordonnée correspond à un pixel de couleur du coeur 
+
+        # dessiner chaque "pixel"
+        for (dx, dy) in heart_shape:
+            pygame.draw.rect(
+                screen,
+                color,
+                (x + dx * size, y + dy * size, size, size)
+            ) 
 
     def draw(self):
         '''
@@ -158,11 +207,16 @@ class Gameco:
             self.home_menu.draw(self.screen)
 
         elif self.state == "playing":
-            """
+            
+            #affiche le score
             font = pygame.font.SysFont(None, 50)
-            text = font.render("GAME RUNNING", True, (255,255,255)) # supprimer plus tard 
-            self.screen.blit(text, (100,100))
-            """
+            #score_text = font.render(f"Score: {self.player.score}", True, (255,255,255))
+            #self.screen.blit(score_text, (1100,70))
+
+            # affiche les vies(coeurs)
+            for i in range(self.player.lives):
+                self.draw_heart(self.screen, 20 + i * 30, 20, size=4) # espacement entre les coeurs = 30px, taille des pixels = 4px
+            
             # acteurs du jeu
             self.bricks.draw(self.screen)
             self.raquette.draw(self.screen)

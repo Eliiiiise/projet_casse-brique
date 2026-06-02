@@ -14,29 +14,12 @@ def handle_collisions(game):
             # éviter que la balle reste collée
             ball.rect.bottom = game.raquette.rect.top
 
-        # influence de la raquette sur la balle (plus la souris bouge vite, plus la balle part sur les côtés)
-        dx_mouse = pygame.mouse.get_rel()[0]
-        if dx_mouse != 0:
-            ball.dx = max(-15, min(15, dx_mouse))
+            # influence de la raquette sur la balle (plus la souris bouge vite, plus la balle part sur les côtés)
+            dx_mouse = pygame.mouse.get_rel()[0]
+            if dx_mouse != 0:
+                ball.dx = max(-15, min(15, dx_mouse))
     
 
-    '''
-    # collision raquette-balle
-    for ball in game.balls:
-
-        if ball.rect.colliderect(game.raquette.rect) and ball.dy > 0: #collision que si la balle descend
-
-            # rebond, inverse la direction verticale
-            ball.dy *= -1
-
-            # repositionner la balle SUR la raquette 
-            ball.rect.bottom = game.raquette.rect.top
-
-            # effet angle (simple et propre)
-            offset = ball.rect.centerx - game.raquette.rect.centerx
-
-            ball.dx = offset * 0.1   # ajuste la puissance du rebond horizontal
-'''
     #collision balle-brique
     for ball in game.balls:
         for brick in game.bricks:
@@ -44,8 +27,9 @@ def handle_collisions(game):
                 # collision détectée
                 if ball.rect.colliderect(brick.rect):
 
+                    if not getattr(game, "piercing", False):
                     # inverse la direction verticale --> rebond
-                    ball.dy *= -1
+                        ball.dy *= -1
 
                      #sort la balle de la brique sinon plusieurs collisions se produisent
                     if ball.dy > 0:
@@ -83,17 +67,3 @@ def handle_collisions(game):
 
                 # supprime le power-up
                 powerup.kill()
-
-                # fin des powerup temporaires
-                current_time = pygame.time.get_ticks()
-
-                if hasattr(game, "power_end_time"):
-
-                    if current_time > game.power_end_time:
-
-                         # taille normale raquette
-                        game.raquette.rect.width = 100
-
-                        # désactive effets
-                        game.invisible = False
-                        game.piercing = False

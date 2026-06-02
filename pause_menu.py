@@ -1,6 +1,7 @@
 # affiche le menu pause
 # bouton play
 import pygame
+
 class PauseMenu:
     def __init__(self, gameco):
         self.game = gameco
@@ -24,26 +25,17 @@ class PauseMenu:
             True,              
             (0,204,204)     
         )
-
-        #texte instructions
-        self.vie = self.text_font.render(
-            "nombre de vie: x",
-            True,
-            (51,153,255)  
-        )
-        self.score = self.text_font.render(
-            "Score :0",
-            True,
-            (51,153,255)  
-        )
-        self.level = self.text_font.render(
-            "Niveau : 1/10",
-            True,
-             (51,153,255)  
-        )
-
         
-        #texte bouton
+        
+        #texte instructions
+
+        self.score = self.text_font.render(
+            "score: ",
+            True,
+            (51,153,255)  
+        )
+        
+        #texte bouton reprendre
         self.button_text = self.button_font.render("Reprendre", True, (255, 255, 255))
 
         # texte bouton X
@@ -58,9 +50,12 @@ class PauseMenu:
         )
         
         #centré au milieu (espacé vertical)
-        self.vie_rect = self.vie.get_rect(center=(centre_x, 380))
-        self.score_rect = self.score.get_rect(center=(centre_x, 430))
-        self.level_rect = self.level.get_rect(center=(centre_x, 480))
+        self.vie_rect = pygame.Rect(0, 0, 0, 0) # Initialisation vide, sera mis à jour dans draw() pour être centré dynamiquement
+        self.vie_rect.center = (centre_x, 380) 
+        #self.score_rect = pygame.Rect(0, 0, 0, 0) # Initialisation vide, sera mis à jour dans draw() pour être centré dynamiquement 
+        #self.score_rect.center = (centre_x, 430)
+        self.level_rect= pygame.Rect(0, 0, 0, 0) # Initialisation vide, sera mis à jour dans draw() pour être centré dynamiquement
+        self.level_rect.center = (centre_x, 480)
         self.button_text_rect = self.button_text.get_rect(center=self.button_rect.center)
         self.quit_text_rect = self.quit_text.get_rect(center=self.quit_rect.center)
 
@@ -72,13 +67,44 @@ class PauseMenu:
 
     def draw(self, screen): #affichage du menu 
         
+        #texte dynamique (score, vie, level)
+        #VIE
+            #en toute lettre 
+        vie_text = self.text_font.render(
+            f"nombre de vie: {self.game.player.lives}",
+            True,
+            (51,153,255)  
+        )
+        #mettre a jour la position du texte vie en fonction de sa largeur pour qu'il soit toujours centré
+        vie_rect = vie_text.get_rect(center=(1280//2, 380))
+        '''
+            #en coeur
+        for i in range(self.game.player.lives):
+            self.game.draw_heart(screen, 520 + i * 30, 370, size=4)
+        '''
+        #SCORE
+        #self.score = self.text_font.render(
+         #   f"Score: {self.game.player.score}",
+          #  True,
+           # (51,153,255)  
+        #)
+        #self.score_rect = self.score.get_rect(center=(1280//2, 430))
+
+        #LEVEL
+        level_text = self.text_font.render(
+            f"Niveau : {self.game.current_level + 1}/10",
+            True,
+             (51,153,255)  
+        )
+        level_rect = level_text.get_rect(center=(1280//2, 480))
+
         #afficher le texte
         screen.blit(self.title, self.title_rect)
-        screen.blit(self.vie, self.vie_rect)
-        screen.blit(self.score, self.score_rect)
-        screen.blit(self.level, self.level_rect)
+        screen.blit(vie_text, vie_rect)
+        #screen.blit(score_text, score_rect)
+        screen.blit(level_text, level_rect)
        
-        #bouton 
+        #bouton reprendre
         mouse_pos = pygame.mouse.get_pos()
         # Si la souris est dessus → couleur plus claire
         if self.button_rect.collidepoint(mouse_pos): # quand la souris est dessus
@@ -116,12 +142,12 @@ class PauseMenu:
         hover = self.home_rect.collidepoint(mouse_pos)
         # Si la souris est dessus → couleur plus claire et grossissement du bouton
         if hover: # quand la souris est dessus 
-            color = (204, 0, 102) 
-            scale_rect = self.quit_rect.inflate(10, 10)
+            color = (255, 65, 161) # même que couleur des coeurs pour une cohérence visuelle
+            scale_rect = self.home_rect.inflate(10, 10)
 
         else: # de base 
             color = (255, 0, 127)
-            scale_rect = self.quit_rect
+            scale_rect = self.home_rect
 
 
     # Dessine le bouton home

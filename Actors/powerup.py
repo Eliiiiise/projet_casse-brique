@@ -46,30 +46,39 @@ class PowerUp(Actor.Actor):
         # Type 1: agrandir la raquette 
         if self.type == 1:
             game.raquette.rect.width = 200
+            #redessiner la raquette
+            game.raquette.resize(200, game.raquette.rect.height, (165, 255, 223))
             game.power_end_time = current_time + 10000
+            print("Power-up appliqué :", self.type)
 
         # Type 2: rapetissir la raquette
         elif self.type == 2:
             game.raquette.rect.width = 50
+            #redessiner la raquette
+            game.raquette.resize(50, game.raquette.rect.height, (255, 232, 165))
             game.power_end_time = current_time + 10000
+            print("Power-up appliqué :", self.type)
 
         # Type 3: balle ralentie
         elif self.type == 3:
             for ball in game.balls:
                 ball.dy = 5
             game.power_end_time = current_time + 5000
+            print("Power-up appliqué :", self.type)
 
         # Type 4: balle accélérée 
         elif self.type == 4:
             for ball in game.balls:
                 ball.dy = 15
             game.power_end_time = current_time + 5000
+            print("Power-up appliqué :", self.type)
 
         # Type 5: 10 balles supplémentaires
         elif self.type == 5:
             for _ in range(10):
                 new_ball = Ball()
                 game.balls.add(new_ball)
+                print("Power-up appliqué :", self.type)
 
         # Type 6: balle invisible
         elif self.type == 6:
@@ -77,9 +86,12 @@ class PowerUp(Actor.Actor):
                 ball.image.set_alpha(0) # rend la balle invisible
             game.invisible = True
             game.power_end_time = current_time + 2000
+            print("Power-up appliqué :", self.type)
 
         # Type 7: balles transperçantes
         elif self.type == 7:
             for ball in game.balls:
                 ball.piercing = True
             game.power_end_time = current_time + 10000
+            print("Power-up appliqué :", self.type)
+
