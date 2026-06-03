@@ -49,14 +49,51 @@ def handle_click (game,event):
     """
     Gère les clics de la souris 
     """    
-    if game.state == "menu":
-        game.home_menu.handle_event(event)
-    elif game.state == "pause":
-        game.pause_menu.handle_event(event)
-    elif game.state == "game_over":
-        game.gameover_menu.handle_event(event)
-    
+    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
 
+        mouse_pos = pygame.mouse.get_pos()
+
+        # ---------------------------
+        # MENU PRINCIPAL
+        # ---------------------------
+        if game.state == "menu":
+
+            if game.home_menu.button_rect.collidepoint(mouse_pos):
+                game.state = "playing"
+
+        # ---------------------------
+        # MENU PAUSE
+        # ---------------------------
+        elif game.state == "pause":
+
+            # bouton reprendre
+            if game.pause_menu.button_rect.collidepoint(mouse_pos):
+                print("REPRENDRE")
+                game.state = "playing"
+
+            # bouton quitter (X)
+            elif game.pause_menu.quit_rect.collidepoint(mouse_pos):
+                print("QUIT")
+                game.running = False
+
+            # bouton home
+            elif game.pause_menu.home_rect.collidepoint(mouse_pos):
+                print("HOME")
+                game.state = "menu"
+
+        # ---------------------------
+        # GAME OVER
+        # ---------------------------
+        elif game.state == "game_over":
+
+            if game.gameover_menu.button_rect.collidepoint(mouse_pos):
+                game.reset_game()
+                game.state = "playing"
+
+            #bouton quitter (X)    
+            elif game.gameover_menu.quit_rect.collidepoint(mouse_pos):
+                print("QUIT")
+                game.running = False
 
 def handle_input(game, events):
 

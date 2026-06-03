@@ -1,3 +1,5 @@
+from turtle import color
+
 import pygame
 from Actors.raquette import * 
 
@@ -31,6 +33,32 @@ class Actor(pygame.sprite.Sprite): #classe spéciale de Pygame pour gérer les o
         # - la position
         # - les collisions
         self.rect= self.image.get_rect(topleft= (x,y))
+
+    def set_color(self, color):
+        '''
+        Change la couleur de l'objet en redessinant sa surface
+        '''
+        self.image.fill(color)
+
+    def resize(self, width, height, color):
+        """
+        Redimensionne l'objet et met à jour son image + couleur
+        """
+
+        # garder le centre AVANT modification
+        center = self.rect.center
+
+        # nouvelle image
+        self.image = pygame.Surface((width, height))
+
+        # couleur
+        self.image.fill(color)
+
+        # nouveau rect basé sur la nouvelle image
+        self.rect = self.image.get_rect()
+
+        # remettre l'objet au bon endroit
+        self.rect.center = center
 
     def update(self):
         pass

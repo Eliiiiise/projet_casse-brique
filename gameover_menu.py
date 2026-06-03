@@ -25,18 +25,20 @@ class GameOverMenu:
             True,              
             (255,0,0)     
         )
+        ''' a supprimer plus tard, remplacé par du texte dynamique dans draw()
         # texte score 
         self.score_text = self.text_font.render(
-            "Score : 0",
+            "Score : ",
             True,
             (118,255,97)  
         )
         # texte level
         self.level_text = self.text_font.render(
-            "Niveau : 1/10",
+            "Niveau : ",
             True,
             (118,255,97)  
         )
+        '''
         # texte crédits
         self.credit = self.small_font.render(
             "Made by Estiiiiiii & Eliiiiise",
@@ -57,8 +59,10 @@ class GameOverMenu:
         )
 
         #centré au milieu (espacé vertical)
-        self.score_rect_rect = self.score_text.get_rect(center=(centre_x, 380))
-        self.lev_rect_rect = self.level_text.get_rect(center=(centre_x, 430))
+        #self.score_rect = pygame.Rect(0, 0, 0, 0) # Initialisation vide, sera mis à jour dans draw() pour être centré dynamiquement
+        #self.score_rect.center = (centre_x, 380)
+        self.level_rect = pygame.Rect(0, 0, 0, 0) # Initialisation vide, sera mis à jour dans draw() pour être centré dynamiquement
+        self.level_rect.center = (centre_x, 430)
         self.button_text_rect = self.button_text.get_rect(center=self.button_rect.center)
         self.quit_text_rect = self.quit_text.get_rect(center=self.quit_rect.center)
        
@@ -96,11 +100,32 @@ class GameOverMenu:
             
     def draw(self, screen): #affichage du menu 
         #couleur de fond
-        screen.fill((0, 0, 0))
+        screen.fill((0, 0, 255))
+
+         #texte dynamique (score, level)
+        #mettre a jour la position du texte vie en fonction de sa largeur pour qu'il soit toujours centré
+        vie_rect = vie_text.get_rect(center=(1280//2, 380))
+        
+        #SCORE
+        #score_text = self.text_font.render(
+         #   f"Score: {self.game.player.score}",
+          #  True,
+           # (118,255,97)   
+        #)
+        #score_rect = score_text.get_rect(center=(1280//2, 430))
+
+        #LEVEL
+        level_text = self.text_font.render(
+            f"Niveau : {self.game.current_level + 1}/10",
+            True,
+             (51,153,255)  
+        )
+        level_rect = level_text.get_rect(center=(1280//2, 480))
+
         #afficher le texte
         screen.blit(self.title, self.title_rect)
-        screen.blit(self.score, self.score_rect)
-        screen.blit(self.level, self.level_rect)
+        #screen.blit(score_text, score_rect)
+        screen.blit(level_text, level_rect)
         screen.blit(self.credit, self.credit_rect)
        
         
