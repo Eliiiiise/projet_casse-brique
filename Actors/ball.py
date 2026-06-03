@@ -27,7 +27,16 @@ class Ball(Actor.Actor):
         # vitesse
         self.dx = random.randint(-15, 15)
         self.dy = -10 # en pygame y aug vers le bas et diminue vers le haut
-        
+        self.piercing = False # la balle n'est pas transperçante au départ
+
+        # balle visible par défaut
+        self.blinking = False
+
+        # utilisé pour faire clignoter
+        self.visible = True
+
+        # timer du clignotement
+        self.last_blink = 0     
 
     def update(self):
         # déplacement
@@ -45,3 +54,29 @@ class Ball(Actor.Actor):
         # balle perdue
         if self.rect.bottom >= WINDOW_SIZE[1]:
             self.kill()  # supprime la balle
+
+        # limite la vitesse horizontale
+        self.dx = max(-15, min(15, self.dx))
+
+        # limite aussi dy pour éviter les vitesses folles
+        if self.dy > 0:
+            self.dy = min(self.dy, 15)
+        else:
+            self.dy = max(self.dy, -15)
+
+        # Effet clignotement
+        if self.blinking:
+
+            current_time = pygame.time.get_ticks()
+
+            # change visibilité toutes les 150 ms
+            if current_time - self.last_blink > 150:
+
+                self.visible = not self.visible
+                 
+                if self.visible:
+                    self.image.set_alpha(255)
+                else:
+                    self.image.set_alpha(40)
+
+                self.last_blink = current_time

@@ -16,8 +16,14 @@ def handle_collisions(game):
 
             # influence de la raquette sur la balle (plus la souris bouge vite, plus la balle part sur les côtés)
             dx_mouse = pygame.mouse.get_rel()[0]
+           
+           #limite l'influence de la souris pour éviter des vitesses extrêmes
+            dx_mouse = max(-15, min(15, dx_mouse))
+
             if dx_mouse != 0:
-                ball.dx = max(-15, min(15, dx_mouse))
+                ball.dx = dx_mouse
+            else:
+                ball.dx = max(-10, min(10, ball.dx))
     
 
     #collision balle-brique
@@ -27,7 +33,7 @@ def handle_collisions(game):
                 # collision détectée
                 if ball.rect.colliderect(brick.rect):
 
-                    if not getattr(game, "piercing", False):
+                    if not ball.piercing:
                     # inverse la direction verticale --> rebond
                         ball.dy *= -1
 

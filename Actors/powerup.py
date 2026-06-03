@@ -62,14 +62,20 @@ class PowerUp(Actor.Actor):
         # Type 3: balle ralentie
         elif self.type == 3:
             for ball in game.balls:
-                ball.dy = 5
+                if ball.dy > 0:
+                    ball.dy = 5
+                else:
+                    ball.dy = -5
             game.power_end_time = current_time + 5000
             print("Power-up appliqué :", self.type)
 
         # Type 4: balle accélérée 
         elif self.type == 4:
             for ball in game.balls:
-                ball.dy = 15
+                if ball.dy > 0:
+                    ball.dy = 15
+                else:
+                    ball.dy = -15
             game.power_end_time = current_time + 5000
             print("Power-up appliqué :", self.type)
 
@@ -80,11 +86,10 @@ class PowerUp(Actor.Actor):
                 game.balls.add(new_ball)
                 print("Power-up appliqué :", self.type)
 
-        # Type 6: balle invisible
+        # Type 6: balle invisible (clignotte)
         elif self.type == 6:
             for ball in game.balls:
-                ball.image.set_alpha(0) # rend la balle invisible
-            game.invisible = True
+                ball.blinking = True # la balle clignotte
             game.power_end_time = current_time + 2000
             print("Power-up appliqué :", self.type)
 

@@ -11,6 +11,7 @@ mais il ne doit pas lancer le jeu!!!!'''
 
 import pygame
 import random
+from Actors import ball
 from window import *
 from home_menu import HomeMenu
 from gameover_menu import GameOverMenu
@@ -23,6 +24,7 @@ from levels import LEVELS
 from player import Player
 from collisions import handle_collisions
 from input_manager import handle_input
+from level_transition import LevelTransition
 
 
 
@@ -50,6 +52,7 @@ class Gameco:
         self.home_menu = HomeMenu(self)
         self.gameover_menu = GameOverMenu(self)
         self.pause_menu =PauseMenu(self)
+        self.level_transition = LevelTransition(self) 
 
         # Donnée joueur
         self.player = Player() 
@@ -68,7 +71,7 @@ class Gameco:
         self.current_level = 0 #renvoi à la position dans la liste LEVELS ---> 0==1
 
         # charge le niveau
-        self.load_level(self.current_level)   
+        self.load_level(self.current_level) 
 
         #power-up
         self.powerups =pygame.sprite.Group()    
@@ -139,9 +142,52 @@ class Gameco:
                         self.invisible = False
                         self.piercing = False
 
+                        # remet les balles normales
+                        for ball in self.balls:
+                            ball.piercing = False
+                            ball.blinking = False
+                            ball.visible = True
+                            ball.image.set_alpha(255)
+
                         #supprime le timer pour éviter de vérifier à chaque frame
                         del self.power_end_time
 
+            """
+            passage au niveau suivant si toutes les briques sont détruites
+            """
+            if len(self.bricks) == 0:
+
+                        # passe au niveau suivant
+                        self.current_level += 1
+
+                        # si on dépasse le dernier niveau, on revient au niveau 1
+                        if self.current_level >= len(LEVELS):
+                            self.current_level = 0
+
+                        # charge le niveau suivant
+                        self.load_level(self.current_level)
+
+                        # supprime les anciennes balles
+                        self.balls.empty()
+
+                        # crée une nouvelle balle pour le niveau suivant
+                        self.balls.add(Ball())
+
+                        # lance l'écran de transition
+                        self.state = "level_transition"
+
+                        # mémorise le début de la transition
+                        self.transition_start_time = pygame.time.get_ticks()        
+
+        elif self.state == "level_transition":
+
+            self.level_transition.update()
+
+            current_time = pygame.time.get_ticks()
+
+            if current_time - self.transition_start_time > 2000:
+                self.state = "playing"
+    
         elif self.state == "pause":
             self.pause_menu.update()
           
@@ -241,6 +287,9 @@ class Gameco:
 
             #dessine le menu pause (par dessu le jeu)
             self.pause_menu.draw(self.screen)
+
+        elif self.state == "level_transition":
+            self.level_transition.draw(self.screen)
 
 
         elif self.state == "game_over":
