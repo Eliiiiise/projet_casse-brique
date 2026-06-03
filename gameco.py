@@ -9,6 +9,8 @@ mais il ne doit pas lancer le jeu!!!!'''
 
 #from tkinter import font # police pour les caractères, utile ?
 
+from tkinter import font
+
 import pygame
 import random
 from Actors import ball
@@ -25,6 +27,7 @@ from player import Player
 from collisions import handle_collisions
 from input_manager import handle_input
 from level_transition import LevelTransition
+from name_menu import NameMenu
 
 
 
@@ -52,7 +55,8 @@ class Gameco:
         self.home_menu = HomeMenu(self)
         self.gameover_menu = GameOverMenu(self)
         self.pause_menu =PauseMenu(self)
-        self.level_transition = LevelTransition(self) 
+        self.level_transition = LevelTransition(self)
+        self.name_menu = NameMenu(self) 
 
         # Donnée joueur
         self.player = Player() 
@@ -99,6 +103,9 @@ class Gameco:
         '''
         if self.state == "menu":
             self.home_menu.update()
+
+        elif self.state == "name_menu":
+            self.name_menu.update()
 
         elif self.state == "playing":
             # appel d'une méthode d'un objet
@@ -252,13 +259,24 @@ class Gameco:
         if self.state == "menu":
             self.home_menu.draw(self.screen)
 
-        elif self.state == "playing":
-            
-            #affiche le score
-            font = pygame.font.SysFont(None, 50)
-            #score_text = font.render(f"Score: {self.player.score}", True, (255,255,255))
-            #self.screen.blit(score_text, (1100,70))
+        elif self.state == "name_menu":
+            self.name_menu.draw(self.screen)
 
+        elif self.state == "playing":
+            # affiche le score
+            font = pygame.font.SysFont(None, 40)
+
+            score_text = font.render(
+                f"Score : {self.player.score}",
+                True,
+                (255, 255, 255)
+            )
+            # place le texte à droite avec une marge de 20 px
+            score_rect = score_text.get_rect(
+                topright=(WINDOW_SIZE[0] - 20, 20)
+            )
+            self.screen.blit(score_text, score_rect)
+            
             # affiche les vies(coeurs)
             for i in range(self.player.lives):
                 self.draw_heart(self.screen, 20 + i * 30, 20, size=4) # espacement entre les coeurs = 30px, taille des pixels = 4px

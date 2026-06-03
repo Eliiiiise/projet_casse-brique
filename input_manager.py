@@ -59,7 +59,7 @@ def handle_click (game,event):
         if game.state == "menu":
 
             if game.home_menu.button_rect.collidepoint(mouse_pos):
-                game.state = "playing"
+                game.state = "name_menu" # transition vers le menu de saisie du pseudo avant de commencer le jeu
 
         # ---------------------------
         # MENU PAUSE
@@ -103,7 +103,11 @@ def handle_input(game, events):
     # événements clavier/souris
     for event in events:
            handle_keyboard(game, event)
-           handle_click(game, event)    
+           handle_click(game, event) 
+
+           if game.state == "name_menu":
+                game.name_menu.handle_event(event)
+
            if event.type == pygame.QUIT:  # si on clique sur la croix de la fenêtre
                game.running = False
 

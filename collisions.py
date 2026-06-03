@@ -50,7 +50,10 @@ def handle_collisions(game):
                     # si la brique est détruite --> chance de power-up
                     if not brick.alive():
 
-                    # 50% de chance de créer un power-up
+                        # ajoute 10 points quand une brique est détruite
+                        game.player.add_score(10)
+
+                        # 50% de chance de créer un power-up
                         if random.random() < 0.5:
 
                             # céation du powerup au centre de la brique

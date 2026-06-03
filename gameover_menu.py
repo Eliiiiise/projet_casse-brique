@@ -102,32 +102,27 @@ class GameOverMenu:
         #couleur de fond
         screen.fill((0, 0, 255))
 
-         #texte dynamique (score, level)
-        #mettre a jour la position du texte vie en fonction de sa largeur pour qu'il soit toujours centré
-        vie_rect = vie_text.get_rect(center=(1280//2, 380))
-        
-        #SCORE
-        #score_text = self.text_font.render(
-         #   f"Score: {self.game.player.score}",
-          #  True,
-           # (118,255,97)   
-        #)
-        #score_rect = score_text.get_rect(center=(1280//2, 430))
+        # texte dynamique : vies
+        vie_text = self.text_font.render(
+            f"Vies restantes : {self.game.player.lives}",
+            True,
+            (118, 255, 97)
+        )
 
-        #LEVEL
+        vie_rect = vie_text.get_rect(center=(1280//2, 380))
+
+        # texte dynamique : niveau
         level_text = self.text_font.render(
             f"Niveau : {self.game.current_level + 1}/10",
             True,
-             (51,153,255)  
+            (51,153,255)
         )
+
         level_rect = level_text.get_rect(center=(1280//2, 480))
 
-        #afficher le texte
         screen.blit(self.title, self.title_rect)
-        #screen.blit(score_text, score_rect)
+        screen.blit(vie_text, vie_rect)
         screen.blit(level_text, level_rect)
-        screen.blit(self.credit, self.credit_rect)
-       
         
         #bouton 
         mouse_pos = pygame.mouse.get_pos()
