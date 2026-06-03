@@ -74,7 +74,7 @@ class HomeMenu:
         pass
 
 
-    def handle_event(self, event):
+    def handle_event(self, event): # a déplacer dans imput_manager
         ''' 
         Gère les clics souris dans le menu
         '''
