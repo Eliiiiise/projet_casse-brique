@@ -1,14 +1,14 @@
 [
     {
+        "name": "1",
+        "score": 400
+    },
+    {
+        "name": "1",
+        "score": 140
+    },
+    {
         "name": "ABC",
         "score": 110
-    },
-    {
-        "name": "A",
-        "score": 100
-    },
-    {
-        "name": "ABC",
-        "score": 70
     }
 ]

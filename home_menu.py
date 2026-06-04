@@ -10,48 +10,61 @@ class HomeMenu:
         self.button_font= pygame.font.SysFont(None,50)#bouton
         self.text_font = pygame.font.SysFont(None, 40) #texte
         self.small_font = pygame.font.SysFont(None, 25,italic=True) #crédit en italique
+        # couleurs du menu
+        self.bg_color = (0, 0, 0)
+        self.white = (255, 255, 255)
+        self.grey = (170, 170, 170)
+        self.dark_grey = (35, 35, 35)
+        self.pink = (255, 65, 161)
+        self.pink_hover = (255, 120, 190)
+
+        centre_x = 1280 // 2
+        centre_y = 720 // 2
 
         #boutton
-        self.button_rect =pygame.Rect(540,300,150,50)
+        self.button_rect = pygame.Rect(0, 0, 150, 50)
+        self.button_rect.center = (centre_x, 300)
 
         # Texte titre
         self.title = self.title_font.render(
-            "Casse Brique :",
+            "CASSE-BRIQUE",
             True,              
-            (0,204,204)     
+            self.white    
         )
 
         #texte instructions
         self.line2 = self.text_font.render(
             "Appuie sur P pour mettre en pause",
             True,
-            (51,153,255)  
+            self.grey
         )
         self.line3 = self.text_font.render(
             "Appuie sur M pour accéder au menu",
             True,
-            (51,153,255)  
+            self.grey  
         )
         self.line4 = self.text_font.render(
             "Appuie sur ESC pour quitter",
             True,
-            (102,102,255)  
+            self.grey  
         )
 
         #texte crédits
         self.credit = self.small_font.render(
             "Made by Estiiiiiii & Eliiiiise",
             True,
-            (153,204,255)
+            self.grey
         )
 
         #texte bouton
-        self.button_text = self.button_font.render("Jouer", True, (255, 255, 255))
+        self.button_text = self.button_font.render(
+            "JOUER",
+            True,
+            self.white
+        )
 
         
-        # Position du texte 
-        centre_x=1280//2 #centre ecran
-        centre_y=720//2 # centre ecran
+        # Position du texte
         self.title_rect = self.title.get_rect(
             center=(centre_x, 200)   #centré haut
         )
@@ -103,11 +116,11 @@ class HomeMenu:
         mouse_pos = pygame.mouse.get_pos()
         # Si la souris est dessus → couleur plus claire
         if self.button_rect.collidepoint(mouse_pos): # quand la souris est dessus
-            color = (102, 255, 255) 
+            color = self.pink_hover 
         else: #de base
-            color = (102, 178, 255) 
+            color = self.pink 
 
-        # Dessine le bouton
+        # Dessine le bouton avec contour blanc
         pygame.draw.rect(screen, color, self.button_rect)
 
         # Dessine le texte

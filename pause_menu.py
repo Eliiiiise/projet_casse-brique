@@ -11,28 +11,35 @@ class PauseMenu:
         self.button_font= pygame.font.SysFont(None,50)#bouton
         self.quit_font= pygame.font.SysFont(None,50)#bouton rejouer
         self.text_font = pygame.font.SysFont(None, 40) #texte
+        #couleurs
+        self.bg_color = (0, 0, 0)
+        self.white = (255, 255, 255)
+        self.grey = (170, 170, 170)
+        self.light_grey = (220, 220, 220)
+        self.dark_grey = (35, 35, 35)
+        self.pink = (255, 65, 161)
+        self.pink_hover = (255, 120, 190)
+        self.red = (255, 60, 60)
+
 
         #boutons
         self.button_rect =pygame.Rect(540,300,180,50)
         self.quit_rect = pygame.Rect(1200, 20, 40, 40) # position en haut a droite
-        self.home_rect = pygame.Rect(self.quit_rect.x -70, #décalé à gauche
-                                     20,40,40)
+        self.home_rect = pygame.Rect(self.quit_rect.x -70, 20, 40, 40) # décalé à gauche
 
 
         # Texte titre
         self.title = self.title_font.render(
-            "Pause :",
+            "PAUSE",
             True,              
-            (0,204,204)     
+            self.white     
         )
-        
-        
-        #texte instructions
 
-        self.score = self.text_font.render(
-            "score: ",
+        #texte info pause
+        self.line2 = self.text_font.render(
+            "Appuie sur P pour reprendre",
             True,
-            (51,153,255)  
+            self.grey
         )
         
         #texte bouton reprendre
@@ -56,6 +63,8 @@ class PauseMenu:
         #self.score_rect.center = (centre_x, 430)
         self.level_rect= pygame.Rect(0, 0, 0, 0) # Initialisation vide, sera mis à jour dans draw() pour être centré dynamiquement
         self.level_rect.center = (centre_x, 480)
+        self.button_rect = pygame.Rect(0, 0, 180, 50)
+        self.button_rect.center = (centre_x, 500)
         self.button_text_rect = self.button_text.get_rect(center=self.button_rect.center)
         self.quit_text_rect = self.quit_text.get_rect(center=self.quit_rect.center)
 
@@ -98,51 +107,72 @@ class PauseMenu:
 
 
     def draw(self, screen): #affichage du menu 
-        
-        #texte dynamique (score, vie, level)
-        #VIE
-            #en toute lettre 
+
+        # titre pause
+        pause_text = self.title_font.render(
+            "PAUSE",
+            True,
+            self.white
+        )
+
+        pause_rect = pause_text.get_rect(
+            center=(1280 // 2, 170)
+        )
+            
+        #TEXTES DYNAMIQUES
         vie_text = self.text_font.render(
             f"nombre de vie: {self.game.player.lives}",
             True,
-            (51,153,255)  
+            self.grey 
         )
         #mettre a jour la position du texte vie en fonction de sa largeur pour qu'il soit toujours centré
-        vie_rect = vie_text.get_rect(center=(1280//2, 380))
+        vie_rect = vie_text.get_rect(center=(1280//2, 280))
         '''
             #en coeur
         for i in range(self.game.player.lives):
             self.game.draw_heart(screen, 520 + i * 30, 370, size=4)
         '''
-        #SCORE
-        #self.score = self.text_font.render(
-         #   f"Score: {self.game.player.score}",
-          #  True,
-           # (51,153,255)  
-        #)
-        #self.score_rect = self.score.get_rect(center=(1280//2, 430))
+        #score
 
-        #LEVEL
+        score_text = self.text_font.render(
+            f"Score : {self.game.player.score}",
+            True,
+            self.grey
+        )
+
+        score_rect = score_text.get_rect(center=(1280 // 2, 330))
+       
+        #niveau
         level_text = self.text_font.render(
             f"Niveau : {self.game.current_level + 1}/10",
             True,
-             (51,153,255)  
+             self.grey  
         )
-        level_rect = level_text.get_rect(center=(1280//2, 480))
+        level_rect = level_text.get_rect(center=(1280//2, 380))
 
+        # instructions clavier
+        controls_text = self.text_font.render(
+            "P : reprendre    |    M : menu principal",
+            True,
+            self.grey
+        )
+
+        controls_rect = controls_text.get_rect(center=(1280 // 2, 600))
+        
         #afficher le texte
-        screen.blit(self.title, self.title_rect)
+        screen.blit(pause_text, pause_rect)
         screen.blit(vie_text, vie_rect)
-        #screen.blit(score_text, score_rect)
+        screen.blit(score_text, score_rect)
         screen.blit(level_text, level_rect)
+        screen.blit(controls_text, controls_rect)
        
         #bouton reprendre
         mouse_pos = pygame.mouse.get_pos()
         # Si la souris est dessus → couleur plus claire
         if self.button_rect.collidepoint(mouse_pos): # quand la souris est dessus
-            color = (102, 255, 255) 
+            color = self.pink_hover
         else: #de base
-            color = (102, 178, 255) 
+            color = self.pink 
 
         # Dessine le bouton
         pygame.draw.rect(screen, color, self.button_rect)
@@ -164,9 +194,17 @@ class PauseMenu:
 
 
         # Dessine le bouton X
-        pygame.draw.rect(screen, color, scale_rect)
+        if self.quit_rect.collidepoint(mouse_pos):
+            rect = self.quit_rect.inflate(6, 6)
+            quit_color = (120, 0, 0)
+        else:
+            rect = self.quit_rect
+            quit_color = (70, 0, 0)
 
-        # Dessine le texte
+        pygame.draw.rect(screen, quit_color, self.quit_rect, border_radius=6)
+        pygame.draw.rect(screen, self.red, self.quit_rect, width=2, border_radius=6)
+
+        self.quit_text_rect = self.quit_text.get_rect(center=self.quit_rect.center)
         screen.blit(self.quit_text, self.quit_text_rect)
 
         #bouton home
@@ -174,11 +212,11 @@ class PauseMenu:
         hover = self.home_rect.collidepoint(mouse_pos)
         # Si la souris est dessus → couleur plus claire et grossissement du bouton
         if hover: # quand la souris est dessus 
-            color = (255, 65, 161) # même que couleur des coeurs pour une cohérence visuelle
+            color = self.pink_hover
             scale_rect = self.home_rect.inflate(10, 10)
 
         else: # de base 
-            color = (255, 0, 127)
+            color = self.pink
             scale_rect = self.home_rect
 
 

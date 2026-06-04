@@ -44,3 +44,21 @@ class LevelTransition:
         )
 
         screen.blit(level_text, level_rect)
+
+        cycle_text = self.font.render(
+            f"Cycle {self.game.cycle}",
+            True,
+            (180, 180, 180)
+        )
+
+        cycle_rect = cycle_text.get_rect(center=(640, 430))
+        screen.blit(cycle_text, cycle_rect)
+
+        score_text = self.font.render(
+            f"Score : {self.game.player.score}",
+            True,
+            (180, 180, 180)
+        )
+
+        score_rect = score_text.get_rect(center=(640, 480))
+        screen.blit(score_text, score_rect)
