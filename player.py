@@ -1,9 +1,4 @@
-# vies
-# score
-# pseudos
-# highscore...
-
-"""
+'''
 Ce fichier gère les données du joueur.
 
 Il stocke les informations propres à une partie :
@@ -14,7 +9,7 @@ Il stocke les informations propres à une partie :
 La classe Player fournit également des méthodes permettant
 de modifier ces données (ajouter des points, perdre une vie,
 réinitialiser une partie, etc.).
-"""
+'''
 
 class Player:
 

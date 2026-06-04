@@ -1,17 +1,15 @@
-# gère load_scores() et save_scores() add_score() get_top10()
-
-"""
+'''
 Ce fichier gère les meilleurs scores du jeu.
 
 Il est responsable de :
-- charger les scores sauvegardés ;
-- enregistrer les nouveaux scores ;
-- trier les scores du plus grand au plus petit ;
-- conserver uniquement les 10 meilleurs résultats.
+- charger les scores sauvegardés (load_scores()) ;
+- enregistrer les nouveaux scores (save_scores()) ;
+- trier les scores du plus grand au plus petit (add_score()) ;
+- conserver uniquement les 3 meilleurs résultats (get_top3()). 
 
 Les données sont stockées dans un fichier afin de pouvoir
 être conservées entre plusieurs exécutions du programme.
-"""
+'''
 import json # permet de lire et écrire des données au format JSON, utilisé pour stocker les scores dans un fichier
 import os # permet de vérifier si un fichier existe déjà
 
@@ -43,7 +41,9 @@ class Scoreboard:
 
 
     def save_scores(self):
-
+        '''
+        Enregistre les scores dans le fichier JSON.
+        '''
         # ouvre le fichier en écriture
         with open(self.file_name, "w", encoding="utf-8") as file:
 
@@ -52,6 +52,9 @@ class Scoreboard:
 
 
     def add_score(self, name, score):
+        '''
+        Ajoute un nouveau score à la liste, trie les scores et conserve uniquement le top 3.
+        '''
 
         # ajoute le joueur à la liste
         self.scores.append({
@@ -73,4 +76,7 @@ class Scoreboard:
 
 
     def get_top_scores(self):
+        ''' 
+        Retourne la liste des meilleurs scores. 
+        '''
         return self.scores

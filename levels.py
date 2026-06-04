@@ -1,4 +1,10 @@
-# Levels gère la configuration des briques par rapport au niveau
+'''
+Ce module contient la configuration des briques dans des différents niveaux du jeu de casse-brique. 
+Chaque niveau est représenté par une liste de chaînes de caractères, 
+où chaque caractère représente une brique ou un espace vide. 
+Les chiffres indiquent la résistance de la brique, 
+tandis que les points (".") représentent des espaces vides où il n'y a pas de brique. 
+'''
 # Le but est d'augementer au fur et à mesure la difficulté du jeu en augmentant le nombre de briques, leur position, leur résistance, la vitesse de la balle, etc
 # facilite l'implémentation de nouveaux niveaux plus tard
 
@@ -10,14 +16,9 @@ niveau 4 :
 
 Quand les niveaux sont fini on recommence au niveau 1 mais avec une duretée des briques plus forte (plus de coups pour les casser)
 Proposition également pour augementer la vitesse de la balle pour que ce soit plus difficile au tour suivant etc...
-
-le nombre inscrit dans les niveaux correspond à la résistance de la brique à la position de la brique
-"." correspond à un trou
-
 '''
 
 LEVELS = [
-    
     # NIVEAU 1
     [
         "22222222222222",
@@ -132,5 +133,5 @@ LEVELS = [
     ]
 ]
 
-#l'idée est de lire la boucle de 10 niveaux une fois puis la relire en renforçant de 1 chaque brique jusqu'à résistance =4
+#l'idée est de lire la boucle de 10 niveaux une fois puis la relire en renforçant la résistance de 1 pour chaque brique jusqu'à résistance =4
 

@@ -1,71 +1,39 @@
-"""
+'''
 Ce fichier gère l'écran de saisie du pseudo.
-
 Le joueur entre son nom avant le début de la partie.
-Ce pseudo sera associé à son score final et utilisé dans
-le classement des meilleurs scores.
-"""
-
+Ce pseudo sera associé à son score final et utilisé dans le classement des meilleurs scores.
+'''
 import pygame
 
 class NameMenu:
     def __init__(self, game):
         self.game = game
     
-     # texte actuellement saisi par le joueur
+     # Texte actuellement saisi par le joueur
         self.name = ""
 
     # polices utilisées pour l'affichage
         self.title_font = pygame.font.SysFont(None, 70)
         self.text_font = pygame.font.SysFont(None, 45)
         self.small_font = pygame.font.SysFont(None, 30)
+        self.quit_font= pygame.font.SysFont(None,50)
+        self.red = (255, 60, 60)
+
+    # bouton quitter
+        self.quit_rect = pygame.Rect(1200, 20, 40, 40) # position en haut a droite
+
+    # Texte bouton X
+        self.quit_text = self.quit_font.render("X", True, (255, 255, 255))
+    # centreé au milieu 
+        self.quit_text_rect = self.quit_text.get_rect(center=self.quit_rect.center)
 
     def update(self):
         pass
-        #mise à jour du jeu, même logique que les autres mais pas utilisé pour l'instant
-
-    def handle_event(self, event):
-
-        # une touche du clavier est pressée alors:
-        if event.type == pygame.KEYDOWN:
-
-            # touche ENTER : validation du pseudo
-            if event.key == pygame.K_RETURN:
-
-                # vérifie qu'un pseudo a été saisi
-                if self.name.strip() != "":
-                    self.game.player.name = self.name.strip()
-
-                # pseudo par défaut si rien n'est écrit
-                else:
-                    self.game.player.name = "Player"
-
-                # réinitialise la partie
-                self.game.reset_game()
-
-                # lance le jeu
-                self.game.state = "playing"
-
-                # touche supprimer
-            elif event.key == pygame.K_BACKSPACE:
-
-                 # supprime le dernier caractère
-                self.name = self.name[:-1]
-
-            # toutes les autres touches
-            else:
-
-                    # limite la longueur du pseudo
-                    if len(self.name) < 20:
-
-                        # ajoute le caractère saisi
-                        self.name += event.unicode
 
     def draw(self, screen):
             """
             Affiche le menu de saisie du pseudo.
             """
-
             # couleur de fond (noir)
             screen.fill((0, 0, 0))
 
@@ -94,6 +62,26 @@ class NameMenu:
                 center=(640, 330)
             )
 
+            # CADRE AUTOUR DU CHAMP DE SAISIE
+            # padding autour du texte (espace)
+            padding = 20
+
+            # créer un rectangle plus grand que le texte
+            box_rect = pygame.Rect(
+                input_rect.x - padding,
+                input_rect.y - padding,
+                input_rect.width + padding * 2,
+                input_rect.height + padding * 2
+            )
+
+            # dessiner le contour rose
+            pygame.draw.rect(
+                screen,
+                (255, 65, 161),
+                box_rect,
+                2  # épaisseur du contour
+            )
+
             screen.blit(input_text, input_rect)
 
             # INSTRUCTIONS
@@ -108,4 +96,30 @@ class NameMenu:
             )
 
             screen.blit(info, info_rect)
+
+            # BOUTON "X" POUR QUITTER
+            mouse_pos = pygame.mouse.get_pos()
+            hover = self.quit_rect.collidepoint(mouse_pos)
+            # Si la souris est dessus → couleur plus claire et grossissement du bouton
+            if hover: # quand la souris est dessus 
+                color = (150, 0, 0) 
+                scale_rect = self.quit_rect.inflate(10, 10)
+
+            else: # de base 
+                color = (236, 0, 0)
+                scale_rect = self.quit_rect
+
+            # Dessine le bouton X
+            if self.quit_rect.collidepoint(mouse_pos):
+                rect = self.quit_rect.inflate(6, 6)
+                quit_color = (120, 0, 0)
+            else:
+                rect = self.quit_rect
+                quit_color = (70, 0, 0)
+
+            pygame.draw.rect(screen, quit_color, self.quit_rect, border_radius=6)
+            pygame.draw.rect(screen, self.red, self.quit_rect, width=2, border_radius=6)
+
+            self.quit_text_rect = self.quit_text.get_rect(center=self.quit_rect.center)
+            screen.blit(self.quit_text, self.quit_text_rect)
             

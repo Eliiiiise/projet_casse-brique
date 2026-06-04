@@ -1,3 +1,8 @@
+'''
+Ce module gère le menu de pause du jeu de casse-brique.
+Il affiche les informations de la partie en cours (score, niveau, vies restantes), 
+et propose des options pour reprendre la partie, retourner au menu principal ou quitter le jeu.
+'''
 # affiche le menu pause
 # bouton play
 import pygame
@@ -11,6 +16,7 @@ class PauseMenu:
         self.button_font= pygame.font.SysFont(None,50)#bouton
         self.quit_font= pygame.font.SysFont(None,50)#bouton rejouer
         self.text_font = pygame.font.SysFont(None, 40) #texte
+
         #couleurs
         self.bg_color = (0, 0, 0)
         self.white = (255, 255, 255)
@@ -21,12 +27,10 @@ class PauseMenu:
         self.pink_hover = (255, 120, 190)
         self.red = (255, 60, 60)
 
-
         #boutons
         self.button_rect =pygame.Rect(540,300,180,50)
         self.quit_rect = pygame.Rect(1200, 20, 40, 40) # position en haut a droite
         self.home_rect = pygame.Rect(self.quit_rect.x -70, 20, 40, 40) # décalé à gauche
-
 
         # Texte titre
         self.title = self.title_font.render(
@@ -35,17 +39,17 @@ class PauseMenu:
             self.white     
         )
 
-        #texte info pause
-        self.line2 = self.text_font.render(
+        # Texte info pause
+        self.pause_text = self.text_font.render(
             "Appuie sur P pour reprendre",
             True,
             self.grey
         )
         
-        #texte bouton reprendre
+        # Texte bouton reprendre
         self.button_text = self.button_font.render("Reprendre", True, (255, 255, 255))
 
-        # texte bouton X
+        # Texte bouton X
         self.quit_text = self.quit_font.render("X", True, (255, 255, 255))
 
         
@@ -56,15 +60,15 @@ class PauseMenu:
             center=(centre_x, 200)   #centré haut
         )
         
-        #centré au milieu (espacé vertical)
+        # centré au milieu (espacé vertical)
         self.vie_rect = pygame.Rect(0, 0, 0, 0) # Initialisation vide, sera mis à jour dans draw() pour être centré dynamiquement
-        self.vie_rect.center = (centre_x, 380) 
-        #self.score_rect = pygame.Rect(0, 0, 0, 0) # Initialisation vide, sera mis à jour dans draw() pour être centré dynamiquement 
-        #self.score_rect.center = (centre_x, 430)
+        self.vie_rect.center = (centre_x, 280) 
+        self.score_rect = pygame.Rect(0, 0, 0, 0) # Initialisation vide, sera mis à jour dans draw() pour être centré dynamiquement 
+        self.score_rect.center = (centre_x, 330)
         self.level_rect= pygame.Rect(0, 0, 0, 0) # Initialisation vide, sera mis à jour dans draw() pour être centré dynamiquement
-        self.level_rect.center = (centre_x, 480)
+        self.level_rect.center = (centre_x, 380)
         self.button_rect = pygame.Rect(0, 0, 180, 50)
-        self.button_rect.center = (centre_x, 500)
+        self.button_rect.center = (centre_x, 480)
         self.button_text_rect = self.button_text.get_rect(center=self.button_rect.center)
         self.quit_text_rect = self.quit_text.get_rect(center=self.quit_rect.center)
 
@@ -75,39 +79,10 @@ class PauseMenu:
         pass
 
 
-    def handle_event(self, event): # a déplacer dans imput_manager
-        ''' 
-        Gère les clics souris dans le menu
-        '''
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            
-            # vérifier que le clic est sur le bouton
-            if self.button_rect.collidepoint(pygame.mouse.get_pos()):
-            
-                # changer l’état du jeu
-                self.game.state = "playing"
-
-        if event.type == pygame.MOUSEBUTTONDOWN:
-                 mouse_pos = pygame.mouse.get_pos()
-                 
-                # si la souris est sur la croix
-                 if self.quit_rect.collidepoint(mouse_pos):
-                    # quitter le jeu
-                    self.game.running = False
-
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            mouse_pos = pygame.mouse.get_pos()
-
-            # si la souris est sur la croix
-            if self.home_rect.collidepoint(mouse_pos):
-                print("HOME CLIQUE ✅")  # debug
-                
-                # retour au menu principal
-                self.game.state = "menu"
-
-
     def draw(self, screen): #affichage du menu 
-
+        '''
+        affichage du menu pause 
+        '''
         # titre pause
         pause_text = self.title_font.render(
             "PAUSE",
@@ -120,6 +95,7 @@ class PauseMenu:
         )
             
         #TEXTES DYNAMIQUES
+        #vies
         vie_text = self.text_font.render(
             f"nombre de vie: {self.game.player.lives}",
             True,
@@ -127,13 +103,8 @@ class PauseMenu:
         )
         #mettre a jour la position du texte vie en fonction de sa largeur pour qu'il soit toujours centré
         vie_rect = vie_text.get_rect(center=(1280//2, 280))
-        '''
-            #en coeur
-        for i in range(self.game.player.lives):
-            self.game.draw_heart(screen, 520 + i * 30, 370, size=4)
-        '''
-        #score
 
+        #score
         score_text = self.text_font.render(
             f"Score : {self.game.player.score}",
             True,
@@ -156,17 +127,16 @@ class PauseMenu:
             True,
             self.grey
         )
-
         controls_rect = controls_text.get_rect(center=(1280 // 2, 600))
         
-        #afficher le texte
+        # afficher le texte
         screen.blit(pause_text, pause_rect)
         screen.blit(vie_text, vie_rect)
         screen.blit(score_text, score_rect)
         screen.blit(level_text, level_rect)
         screen.blit(controls_text, controls_rect)
        
-        #bouton reprendre
+        # Bouton "Reprendre"
         mouse_pos = pygame.mouse.get_pos()
         # Si la souris est dessus → couleur plus claire
         if self.button_rect.collidepoint(mouse_pos): # quand la souris est dessus
@@ -180,7 +150,7 @@ class PauseMenu:
         # Dessine le texte
         screen.blit(self.button_text, self.button_text_rect)
 
-        #bouton X
+        # Bouton "X" pour quitter
         mouse_pos = pygame.mouse.get_pos()
         hover = self.quit_rect.collidepoint(mouse_pos)
         # Si la souris est dessus → couleur plus claire et grossissement du bouton
@@ -207,7 +177,7 @@ class PauseMenu:
         self.quit_text_rect = self.quit_text.get_rect(center=self.quit_rect.center)
         screen.blit(self.quit_text, self.quit_text_rect)
 
-        #bouton home
+        # Bouton "Home"
         mouse_pos = pygame.mouse.get_pos()
         hover = self.home_rect.collidepoint(mouse_pos)
         # Si la souris est dessus → couleur plus claire et grossissement du bouton
@@ -219,8 +189,7 @@ class PauseMenu:
             color = self.pink
             scale_rect = self.home_rect
 
-
-    # Dessine le bouton home
+        # Dessine le bouton home
         # mur
         pygame.draw.rect(screen, color, (self.home_rect.x +5, self.home_rect.y +15,30,25))
          

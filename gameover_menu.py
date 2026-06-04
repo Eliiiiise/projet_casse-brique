@@ -1,4 +1,7 @@
-#permet d'accéder au score, niveau, changer d'état
+'''
+Ce module gère le menu de fin de partie (Game Over) dans le jeu de casse-brique.
+Il affiche le score final, le niveau atteint, les meilleurs scores, et propose des options pour rejouer ou quitter le jeu.
+'''
 # bouton X arrête la boucle while self.running donc le jeu se ferme propre
 
 import pygame
@@ -15,10 +18,6 @@ class GameOverMenu:
         self.text_font = pygame.font.SysFont(None, 40) #texte
         self.small_font = pygame.font.SysFont(None, 25,italic=True) #crédit en italique
 
-        #boutons
-        self.button_rect =pygame.Rect(540,560,200,55)
-        self.quit_rect = pygame.Rect(1200, 20, 50, 50) # position en haut a droite
-
         # couleurs
         self.bg_color = (0, 0, 0)
         self.white = (255, 255, 255)
@@ -26,37 +25,32 @@ class GameOverMenu:
         self.dark_grey = (45, 45, 45)
         self.light_grey = (100, 100, 100)
         self.red = (255, 60, 60)
+        self.pink = (255, 65, 161)
+        self.pink_hover = (255, 120, 190)
+
+        #boutons
+        self.button_rect =pygame.Rect(540,560,200,55)
+        self.quit_rect = pygame.Rect(1200, 20, 50, 50) # position en haut a droite
+        self.home_rect = pygame.Rect(self.quit_rect.x -70, 20, 40, 40) # décalé à gauche
+
 
         # Texte titre
         self.title = self.title_font.render(
             "GAME OVER :",
             True,              
-            (255,0,0)     
+            self.red    
         )
-        ''' a supprimer plus tard, remplacé par du texte dynamique dans draw()
-        # texte score 
-        self.score_text = self.text_font.render(
-            "Score : ",
-            True,
-            (118,255,97)  
-        )
-        # texte level
-        self.level_text = self.text_font.render(
-            "Niveau : ",
-            True,
-            (118,255,97)  
-        )
-        '''
-        # texte crédits
+        
+        # Texte crédits
         self.credit = self.small_font.render(
             "Made by Estiiiiiii & Eliiiiise",
             True,
-            (153,204,255)
+            self.grey
         )
-        # texte bouton
+        # Texte bouton
         self.button_text = self.button_font.render("Rejouer", True, (255, 255, 255))
 
-        # texte bouton X
+        # Texte bouton X
         self.quit_text = self.quit_font.render("X", True, (255, 255, 255))
 
     # Position du texte 
@@ -74,7 +68,7 @@ class GameOverMenu:
         self.button_text_rect = self.button_text.get_rect(center=self.button_rect.center)
         self.quit_text_rect = self.quit_text.get_rect(center=self.quit_rect.center)
        
-        #texte en bas a droite 
+        # position du texte en bas a droite 
         self.credit_rect = self.credit.get_rect(bottomright=(1250, 700))
 
     def update(self): 
@@ -82,31 +76,11 @@ class GameOverMenu:
             Méthode appelée à chaque frame (utile plus tard pour animations)
             '''
             pass
-
-    def handle_event(self, event): # a déplacer dans imput_manager
-            ''' 
-            Gère les clics souris dans le menu
-            '''
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                
-                # vérifier que le clic est sur le bouton
-                if self.button_rect.collidepoint(pygame.mouse.get_pos()):
-                
-                    # changer l’état du jeu
-                    self.game.reset_game()
-                    self.game.state = "playing"
-
-
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                 mouse_pos = pygame.mouse.get_pos()
-                 
-                # si la souris est sur la croix
-                 if self.quit_rect.collidepoint(mouse_pos):
-                    # quitter le jeu
-                    self.game.running = False
-
             
-    def draw(self, screen): #affichage du menu 
+    def draw(self, screen): 
+        '''
+        Affichage du menu
+        '''
         #couleur de fond (noir)
         screen.fill((0, 0, 0))
 
@@ -119,6 +93,14 @@ class GameOverMenu:
 
         title_rect = title_text.get_rect(center=(640, 90))
         screen.blit(title_text, title_rect)
+
+        # CRÉDITS
+        self.credit = self.small_font.render(
+            "Made by Estiiiiiii & Eliiiiise",
+            True,
+            self.grey
+        )
+        screen.blit(self.credit, self.credit_rect)
 
         # RECAP DE LA PARTIE
         recap_title = self.text_font.render(
@@ -184,7 +166,7 @@ class GameOverMenu:
                 line_rect = line.get_rect(center=(640, 430 + index * 40))
                 screen.blit(line, line_rect)
 
-        #BOUTON REJOUER
+        #BOUTON "REJOUER"
         mouse_pos = pygame.mouse.get_pos()
 
         if self.button_rect.collidepoint(mouse_pos):
@@ -198,8 +180,7 @@ class GameOverMenu:
         self.button_text_rect = self.button_text.get_rect(center=self.button_rect.center)
         screen.blit(self.button_text, self.button_text_rect)
 
-        #BOUTON QUITTER
-
+        #BOUTON "QUITTER" (X)
         if self.quit_rect.collidepoint(mouse_pos):
             quit_color = (120, 0, 0)
         else:
@@ -210,3 +191,26 @@ class GameOverMenu:
 
         self.quit_text_rect = self.quit_text.get_rect(center=self.quit_rect.center)
         screen.blit(self.quit_text, self.quit_text_rect)
+
+        # Bouton "Home"
+        mouse_pos = pygame.mouse.get_pos()
+        hover = self.home_rect.collidepoint(mouse_pos)
+        # Si la souris est dessus → couleur plus claire et grossissement du bouton
+        if hover: # quand la souris est dessus 
+            color = self.pink_hover
+            scale_rect = self.home_rect.inflate(10, 10)
+
+        else: # de base 
+            color = self.pink
+            scale_rect = self.home_rect
+
+        # Dessine le bouton home
+        # mur
+        pygame.draw.rect(screen, color, (self.home_rect.x +5, self.home_rect.y +15,30,25))
+         
+        # toit (tiangle)
+        pygame.draw.polygon(screen,color,[(self.home_rect.x +0, self.home_rect.y+20),
+                                          (self.home_rect.x +20, self.home_rect.y+0),
+                                          (self.home_rect.x +40, self.home_rect.y +20),
+                                          ]
+                            )

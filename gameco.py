@@ -1,13 +1,11 @@
-''' le fichier doit définir la classe game, 
-et gérer : les états du jeu ( menu,jeu,game over),
+''' 
+Le fichier doit définir la classe game, et gérer : 
+les états du jeu ( menu,jeu,game over),
 la boucle principale,
 la coordination des objets,
 mais il ne doit pas lancer le jeu!!!!'''
 # gameco.py remplace le habituel game.py 
-# Gestion principale du jeu (boucle + états)
-#gameco-> dessine tout le jeu 
-
-#from tkinter import font # police pour les caractères, utile ?
+# gameco-> dessine tout le jeu 
 
 from tkinter import font
 
@@ -145,7 +143,7 @@ class Gameco:
                         new_ball = Ball()
                         self.balls.add(new_ball)
 
-            #la gestion du temps  doit être dans la partie "playing" pour éviter que les timers avancent pendant le menu ou la pause 
+            # la gestion du temps  doit être dans la partie "playing" pour éviter que les timers avancent pendant le menu ou la pause 
             # fin des powerup temporaires => à chaque frame, on vérifie si un power-up est actif et si son timer est écoul
             current_time = pygame.time.get_ticks()
 
@@ -185,6 +183,9 @@ class Gameco:
                         if self.current_level >= len(LEVELS):
                             self.current_level = 0
                             self.cycle += 1
+
+                        #reset des vies
+                        self.player.reset_lives()
 
                         # charge le niveau suivant
                         self.load_level(self.current_level)
@@ -254,16 +255,13 @@ class Gameco:
 
         
         
-
     def draw_heart(self, screen, x, y, size=10):
         """
         Dessine un coeur pixelisé à la position (x, y)
         size = taille des pixels
         """
-
         color = (255, 65, 161)  # même que bouton home dans pause_menu pour une cohérence visuelle 
  
-
         # liste de "pixels" du coeur (forme simple)
         heart_shape = [
                   (1,0),(2,0),      (4,0),(5,0),
@@ -295,7 +293,7 @@ class Gameco:
             self.name_menu.draw(self.screen)
 
         elif self.state == "playing":
-            # affiche le score
+            # affiche le SCORE
             font = pygame.font.SysFont(None, 40)
 
             score_text = font.render(
@@ -309,7 +307,7 @@ class Gameco:
             )
             self.screen.blit(score_text, score_rect)
             
-            # affiche les vies(coeurs)
+            # affiche les VIES(coeurs)
             for i in range(self.player.lives):
                 self.draw_heart(self.screen, 20 + i * 30, 20, size=4) # espacement entre les coeurs = 30px, taille des pixels = 4px
             
