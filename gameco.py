@@ -28,7 +28,7 @@ from collisions import handle_collisions
 from input_manager import handle_input
 from level_transition import LevelTransition
 from name_menu import NameMenu
-
+from scoreboard import Scoreboard
 
 
 
@@ -60,7 +60,7 @@ class Gameco:
 
         # Donnée joueur
         self.player = Player() 
-        self.scoreboard = None
+        self.scoreboard = Scoreboard()
         
         # Acteurs du jeu
         self.raquette = Raquette()
@@ -73,6 +73,12 @@ class Gameco:
 
         # niveau actuel
         self.current_level = 0 #renvoi à la position dans la liste LEVELS ---> 0==1
+
+        # cycle actuel des niveaux
+        # cycle 1 = résistance normale (2)
+        # cycle 2 = +1 résistance (3)
+        # cycle 3 = +2 résistance (4(max))
+        self.cycle = 1
 
         # charge le niveau
         self.load_level(self.current_level) 
@@ -125,6 +131,14 @@ class Gameco:
 
                     # GAME OVER
                     if self.player.lives <= 0:
+
+                        # enregistre le score final
+                        self.scoreboard.add_score(
+                            self.player.name,
+                            self.player.score
+                        )
+
+                        # passe à l'écran game over
                         self.state = "game_over"
 
                     else:# recréer une balle
@@ -167,9 +181,10 @@ class Gameco:
                         # passe au niveau suivant
                         self.current_level += 1
 
-                        # si on dépasse le dernier niveau, on revient au niveau 1
+                        # si on dépasse le dernier niveau, on revient au niveau 1 + augmente resistance
                         if self.current_level >= len(LEVELS):
                             self.current_level = 0
+                            self.cycle += 1
 
                         # charge le niveau suivant
                         self.load_level(self.current_level)
@@ -209,18 +224,35 @@ class Gameco:
         Réinitialise le jeu quand on clique Rejouer
         """
         print(">>>Gameco.reset_game() est exécuté")
-        self.player.reset_lives()
+        # reset joueur ---> vies + score
+        self.player.reset_player()
 
-        
-        # reset état
-        self.state = "playing"
+        # retour au premier niveau
+        self.current_level = 0
+        self.load_level(self.current_level)
 
-        # recrée raquette et balle 
+        # recrée raquette et balle/s 
         self.balls = pygame.sprite.Group()
+        self.balls.add(Ball())
         self.raquette = Raquette()
 
-        # recrée briques
+        # supprime les power-ups encore présents (pas qu'ils apparaissent à la partie suivante)
+        self.powerups.empty()
+        if hasattr(self, "power_end_time"):
+            del self.power_end_time
+
+        # recrée briques au cycle de résistance 1
         self.load_level(self.current_level)
+        self.cycle = 1
+
+        # désactive les effets temporaires
+        self.invisible = False
+        self.piercing = False
+
+         # relance la partie
+        self.state = "playing"
+
+        
         
 
     def draw_heart(self, screen, x, y, size=10):
@@ -338,7 +370,10 @@ class Gameco:
                 if char == ".":
                     continue  # trou
 
-                resistance = int(char)
+                base_resistance = int(char)
+                resistance = base_resistance + self.cycle - 1
+                # ne jamais dépasser 4
+                resistance = min(resistance, 4)
 
                 x = offset_x + col_index * (brick_width + spacing_x)
                 y = offset_y + row_index * (brick_height + spacing_y)

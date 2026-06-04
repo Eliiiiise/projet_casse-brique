@@ -16,8 +16,16 @@ class GameOverMenu:
         self.small_font = pygame.font.SysFont(None, 25,italic=True) #crédit en italique
 
         #boutons
-        self.button_rect =pygame.Rect(540,300,150,50)
+        self.button_rect =pygame.Rect(540,560,200,55)
         self.quit_rect = pygame.Rect(1200, 20, 50, 50) # position en haut a droite
+
+        # couleurs
+        self.bg_color = (0, 0, 0)
+        self.white = (255, 255, 255)
+        self.grey = (160, 160, 160)
+        self.dark_grey = (45, 45, 45)
+        self.light_grey = (100, 100, 100)
+        self.red = (255, 60, 60)
 
         # Texte titre
         self.title = self.title_font.render(
@@ -99,60 +107,106 @@ class GameOverMenu:
 
             
     def draw(self, screen): #affichage du menu 
-        #couleur de fond
-        screen.fill((0, 0, 255))
+        #couleur de fond (noir)
+        screen.fill((0, 0, 0))
 
-        # texte dynamique : vies
-        vie_text = self.text_font.render(
-            f"Vies restantes : {self.game.player.lives}",
+        #TITRE GAME OVER
+        title_text = self.title_font.render(
+            "GAME OVER",
             True,
-            (118, 255, 97)
+            self.red
         )
 
-        vie_rect = vie_text.get_rect(center=(1280//2, 380))
+        title_rect = title_text.get_rect(center=(640, 90))
+        screen.blit(title_text, title_rect)
 
-        # texte dynamique : niveau
+        # RECAP DE LA PARTIE
+        recap_title = self.text_font.render(
+            "RÉCAPITULATIF",
+            True,
+            self.white
+        )
+
+        recap_title_rect = recap_title.get_rect(center=(640, 180))
+        screen.blit(recap_title, recap_title_rect)
+
+        pseudo_text = self.text_font.render(
+            f"Joueur : {self.game.player.name}",
+            True,
+            self.grey
+        )
+
+        score_text = self.text_font.render(
+            f"Score final : {self.game.player.score}",
+            True,
+            self.grey
+        )
+
         level_text = self.text_font.render(
-            f"Niveau : {self.game.current_level + 1}/10",
+            f"Niveau atteint : {self.game.current_level + 1}",
             True,
-            (51,153,255)
+            self.grey
         )
 
-        level_rect = level_text.get_rect(center=(1280//2, 480))
+        screen.blit(pseudo_text, pseudo_text.get_rect(center=(640, 230)))
+        screen.blit(score_text, score_text.get_rect(center=(640, 275)))
+        screen.blit(level_text, level_text.get_rect(center=(640, 320)))
 
-        screen.blit(self.title, self.title_rect)
-        screen.blit(vie_text, vie_rect)
-        screen.blit(level_text, level_rect)
-        
-        #bouton 
+        # AFFICHAGE 3 MEILLEURS SCORES
+        top_title = self.text_font.render(
+            "TOP 3",
+            True,
+            self.white
+        )
+
+        top_title_rect = top_title.get_rect(center=(640, 380))
+        screen.blit(top_title, top_title_rect)
+
+        top_scores = self.game.scoreboard.get_top_scores()
+
+        if len(top_scores) == 0:
+            empty_text = self.text_font.render(
+                "Aucun score enregistré",
+                True,
+                self.grey
+            )
+            screen.blit(empty_text, empty_text.get_rect(center=(640, 430)))
+
+        else:
+            for index, score_data in enumerate(top_scores):
+
+                line = self.text_font.render(
+                    f"{index + 1}. {score_data['name']} - {score_data['score']}",
+                    True,
+                    self.grey
+                )
+
+                line_rect = line.get_rect(center=(640, 430 + index * 40))
+                screen.blit(line, line_rect)
+
+        #BOUTON REJOUER
         mouse_pos = pygame.mouse.get_pos()
-        # Si la souris est dessus → couleur plus claire
-        if self.button_rect.collidepoint(mouse_pos): # quand la souris est dessus 
-            color = (102, 255, 255) 
-        else:  # de base 
-            color = (102, 178, 255)
 
-        # Dessine les boutons
-        pygame.draw.rect(screen, color, self.button_rect)
+        if self.button_rect.collidepoint(mouse_pos):
+            button_color = self.light_grey
+        else:
+            button_color = self.dark_grey
 
-        # Dessine le texte
+        pygame.draw.rect(screen, button_color, self.button_rect, border_radius=8)
+        pygame.draw.rect(screen, self.white, self.button_rect, width=2, border_radius=8)
+
+        self.button_text_rect = self.button_text.get_rect(center=self.button_rect.center)
         screen.blit(self.button_text, self.button_text_rect)
 
-        #bouton X
-        mouse_pos = pygame.mouse.get_pos()
-        hover = self.quit_rect.collidepoint(mouse_pos)
-        # Si la souris est dessus → couleur plus claire et grossissement du bouton
-        if hover: # quand la souris est dessus 
-            color = (150, 0, 0) 
-            scale_rect = self.quit_rect.inflate(10, 10)
+        #BOUTON QUITTER
 
-        else: # de base 
-            color = (236, 0, 0)
-            scale_rect = self.quit_rect
+        if self.quit_rect.collidepoint(mouse_pos):
+            quit_color = (120, 0, 0)
+        else:
+            quit_color = (70, 0, 0)
 
-        # Dessine le bouton X
-        pygame.draw.rect(screen, color, scale_rect)
+        pygame.draw.rect(screen, quit_color, self.quit_rect, border_radius=6)
+        pygame.draw.rect(screen, self.red, self.quit_rect, width=2, border_radius=6)
 
-        # Dessine le texte
+        self.quit_text_rect = self.quit_text.get_rect(center=self.quit_rect.center)
         screen.blit(self.quit_text, self.quit_text_rect)
-
