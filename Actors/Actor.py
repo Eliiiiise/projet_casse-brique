@@ -1,10 +1,3 @@
-from turtle import color
-
-import pygame
-from Actors.raquette import * 
-
-#reprendre pour réecrire brique, ball, brick
-
 '''
 Classe mère de tous les objets du jeu.
 
@@ -15,6 +8,12 @@ Un Actor possède :
 
 Les autres classes du jeu héritent de cette classe.
 '''
+
+from turtle import color
+
+import pygame
+from Actors.raquette import * 
+
 class Actor(pygame.sprite.Sprite): #classe spéciale de Pygame pour gérer les objets du jeu ---> facilite les collisions plus tard
 
     #Initialise l'apparence de l'objet.
