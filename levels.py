@@ -4,18 +4,10 @@ Chaque niveau est représenté par une liste de chaînes de caractères,
 où chaque caractère représente une brique ou un espace vide. 
 Les chiffres indiquent la résistance de la brique, 
 tandis que les points (".") représentent des espaces vides où il n'y a pas de brique. 
-'''
-# Le but est d'augementer au fur et à mesure la difficulté du jeu en augmentant le nombre de briques, leur position, leur résistance, la vitesse de la balle, etc
-# facilite l'implémentation de nouveaux niveaux plus tard
 
-'''
-niveau 1 : 3 lignes x 14 briques
-niveau 2 : 4 lignes x 14 briques (une ligne de plus que le niveau 1 ou 3)
-niveau 3 : en pyramide : 8 briques, puis 7 briques, puis 6, puis 5, puis 4, puis 3, puis 2, puis 1 
-niveau 4 : 
-
-Quand les niveaux sont fini on recommence au niveau 1 mais avec une duretée des briques plus forte (plus de coups pour les casser)
-Proposition également pour augementer la vitesse de la balle pour que ce soit plus difficile au tour suivant etc...
+Quand les niveaux sont fini on recommence au niveau 1 mais avec une duretée des briques plus forte (plus de coups pour les casser), jusqu'à resistance 4, la maxiale que nous avons implémenté au niveau des changement de couleur des briques.
+Il est facile d'envisager/implémenter facilement le design de nouveaux niveaux ou simplement d'ajouter des variations de couleur supplémentaires pour la résistance
+Actuellement 10 niveaux dessinés.
 '''
 
 LEVELS = [

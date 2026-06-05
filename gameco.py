@@ -3,8 +3,9 @@ Le fichier doit définir la classe game, et gérer :
 les états du jeu ( menu,jeu,game over),
 la boucle principale,
 la coordination des objets,
-mais il ne doit pas lancer le jeu!!!!'''
-# gameco.py remplace le habituel game.py 
+mais il ne doit pas lancer le jeu --> c'est le rôle de main.py
+'''
+# gameco remplace notre ancien game.py
 # gameco-> dessine tout le jeu 
 
 from tkinter import font

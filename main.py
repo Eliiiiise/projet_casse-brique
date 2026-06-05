@@ -1,4 +1,7 @@
-# point d'entrée du jeu 
+'''
+Ce fichier est le point d'entrée du jeu de casse-brique.
+Il initialise le jeu et lance la boucle principale du jeu.
+'''
 
 import pygame 
 from window import *

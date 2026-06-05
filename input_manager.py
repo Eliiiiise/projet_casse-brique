@@ -1,6 +1,8 @@
-'''Ce module gère les entrées utilisateur (inputs) pour le jeu de casse-brique.
+'''
+Ce module gère les entrées utilisateur (inputs) pour le jeu de casse-brique.
 Il centralise tout ce qui concerne les interactions de l'utilisateur, telles que: 
-les clics de souris, les touches du clavier, et les mouvements de la souris.'''
+les clics de souris, les touches du clavier, et les mouvements de la souris.
+'''
 import pygame
 
 def handle_mouse(game):

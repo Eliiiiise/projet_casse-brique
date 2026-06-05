@@ -3,7 +3,7 @@ Ce module gère l'écran de transition entre les niveaux du jeu de casse-brique.
 Lorsqu'un joueur termine un niveau, cet écran s'affiche pour indiquer le niveau suivant, 
 le cycle actuel et le score du joueur. 
 Un voile noir transparent recouvre l'écran pour mettre en évidence les informations affichées. 
-Après une courte pause de 2 secondes, le jeu reprend avec le nouveau niveau.
+Après une courte pause de 2 secondes, le jeu reprend avec le niveau suivant.
 '''
 import pygame
 from window import WINDOW_SIZE

@@ -1,7 +1,7 @@
 '''
-Ce fichier gère la fenêtre du jeu, notamment la création de la fenêtre
+Window gère les paramètres d'affichage de la fenêtre du jeu.
+
 '''
-# crée la fenêtre , gérer le screen, clear() / update()
 import pygame
 import os
 

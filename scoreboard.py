@@ -7,7 +7,7 @@ Il est responsable de :
 - trier les scores du plus grand au plus petit (add_score()) ;
 - conserver uniquement les 3 meilleurs résultats (get_top3()). 
 
-Les données sont stockées dans un fichier afin de pouvoir
+Les données sont stockées dans un fichier json afin de pouvoir
 être conservées entre plusieurs exécutions du programme.
 '''
 import json # permet de lire et écrire des données au format JSON, utilisé pour stocker les scores dans un fichier
